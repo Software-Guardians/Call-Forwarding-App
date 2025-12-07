@@ -15,7 +15,7 @@
 
 - [x] **Step 1**: Initialize Tauri Project (`npm create tauri-app`). Setup React + TypeScript + Vite.
 - [x] **Step 2**: Install & Configure TailwindCSS (Import "Aura" theme config).
-- [ ] **Step 3**: Setup basic Folder Structure (`components`, `pages`, `hooks`).
+- [x] **Step 3**: Setup basic Folder Structure (`components`, `pages`, `hooks`).
 
 ### Phase 2: Core UI Components (Porting from UI-Template)
 
