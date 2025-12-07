@@ -8,13 +8,15 @@ export default {
     theme: {
         extend: {
             colors: {
-                "primary": "#00F0FF", // Neon Cyan
-                "primary-dim": "rgba(0, 240, 255, 0.1)",
-                "secondary": "#BC13FE", // Electric Violet
-                "accent-green": "#00FFA3", // For Call Button
-                "background-dark": "#050B14", // Deep Void Blue
-                "surface-dark": "#0A141F",
-                "surface-glass": "rgba(10, 20, 31, 0.6)",
+                // Using CSS variables for Theming support
+                // Syntax: rgb(var(--variable-name) / <alpha-value>)
+                "primary": "rgb(var(--color-primary) / <alpha-value>)",
+                "primary-dim": "rgb(var(--color-primary) / 0.1)",
+                "secondary": "rgb(var(--color-secondary) / <alpha-value>)",
+                "accent-green": "rgb(var(--color-accent-green) / <alpha-value>)",
+                "background-dark": "rgb(var(--color-background-dark) / <alpha-value>)",
+                "surface-dark": "rgb(var(--color-surface-dark) / <alpha-value>)",
+                "surface-glass": "rgba(10, 20, 31, 0.6)", // Keeping glass fixed or make variable if needed
             },
             fontFamily: {
                 "display": ["Rajdhani", "sans-serif"],
@@ -22,8 +24,8 @@ export default {
                 "mono": ["Share Tech Mono", "monospace"],
             },
             boxShadow: {
-                "neon": "0 0 10px rgba(0, 240, 255, 0.5), 0 0 20px rgba(0, 240, 255, 0.3)",
-                "neon-green": "0 0 15px rgba(0, 255, 163, 0.5), 0 0 30px rgba(0, 255, 163, 0.3)",
+                "neon": "0 0 10px rgb(var(--color-primary) / 0.5), 0 0 20px rgb(var(--color-primary) / 0.3)",
+                "neon-green": "0 0 15px rgb(var(--color-accent-green) / 0.5), 0 0 30px rgb(var(--color-accent-green) / 0.3)",
                 "glass": "0 8px 32px 0 rgba(0, 0, 0, 0.37)",
             },
             backgroundImage: {

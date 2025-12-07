@@ -2,6 +2,26 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+  :root {
+    /* Theme: Aura (Default) */
+    --color-primary: 0 240 255;
+    /* #00F0FF - RGB values for opacity support */
+    --color-secondary: 188 19 254;
+    /* #BC13FE */
+    --color-accent-green: 0 255 163;
+    /* #00FFA3 */
+    --color-background-dark: 5 11 20;
+    /* #050B14 */
+    --color-surface-dark: 10 20 31;
+    /* #0A141F */
+  }
+
+  /* Future themes can be added here, e.g.:
+  [data-theme="light"] { ... } 
+  */
+}
+
 @layer utilities {
 
   /* Custom Scrollbar for Webkit */
@@ -23,15 +43,15 @@
   }
 
   .glass-panel {
-    background: rgba(10, 20, 31, 0.4);
+    background: rgba(var(--color-surface-dark), 0.4);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
-    border: 1px solid rgba(0, 240, 255, 0.2);
+    border: 1px solid rgba(var(--color-primary), 0.2);
     box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
   }
 
   .text-glow {
-    text-shadow: 0 0 5px rgba(0, 240, 255, 0.7);
+    text-shadow: 0 0 5px rgba(var(--color-primary), 0.7);
   }
 
   /* Input autofill fix for dark mode */
