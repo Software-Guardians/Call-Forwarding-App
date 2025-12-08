@@ -5,11 +5,9 @@ import { DialerKeypad } from '../components/dialer/DialerKeypad';
 import { DialerActions } from '../components/dialer/DialerActions';
 import { DialerFooter } from '../components/dialer/DialerFooter';
 
-interface DialerPageProps {
-    onBack?: () => void;
-}
+interface DialerPageProps { }
 
-export const Dialer: React.FC<DialerPageProps> = ({ onBack }) => {
+export const Dialer: React.FC<DialerPageProps> = () => {
     const [number, setNumber] = useState('(555) 867-5309'); // Default value from template
 
     const handleKeyPress = (key: string) => {
@@ -21,14 +19,10 @@ export const Dialer: React.FC<DialerPageProps> = ({ onBack }) => {
     };
 
     return (
-        <div className="bg-background-dark text-white font-body selection:bg-primary selection:text-black overflow-x-hidden min-h-screen flex flex-col relative">
-            {/* Background Grid Effect */}
-            <div className="fixed inset-0 z-0 pointer-events-none opacity-20" style={{ backgroundImage: 'radial-gradient(#1f2937 1px, transparent 1px)', backgroundSize: '40px 40px' }}></div>
-            <div className="fixed inset-0 z-0 pointer-events-none bg-gradient-to-b from-transparent via-background-dark/80 to-background-dark"></div>
-
+        <div className="text-white font-body selection:bg-primary selection:text-black overflow-x-hidden h-full flex flex-col relative">
             {/* Main Content Wrapper */}
             <div className="relative z-10 flex h-full grow flex-col">
-                <DialerHeader onClose={onBack} />
+                <DialerHeader />
 
                 {/* Main Workspace */}
                 <main className="flex-1 flex justify-center items-center py-8 px-4">

@@ -1,10 +1,8 @@
 import React from 'react';
 
-interface SettingsHeaderProps {
-    onNavigate: (view: 'dashboard' | 'contacts' | 'settings') => void;
-}
+interface SettingsHeaderProps { }
 
-export const SettingsHeader: React.FC<SettingsHeaderProps> = ({ onNavigate }) => {
+export const SettingsHeader: React.FC<SettingsHeaderProps> = () => {
     return (
         <header className="sticky top-0 z-50 w-full border-b border-white/10 bg-background-dark/80 backdrop-blur-md">
             <div className="max-w-[1400px] mx-auto px-6 h-16 flex items-center justify-between">
@@ -17,27 +15,9 @@ export const SettingsHeader: React.FC<SettingsHeaderProps> = ({ onNavigate }) =>
                         <span className="text-xs font-mono text-primary/70 tracking-tight">SYSTEM CONFIG // v2.4.0</span>
                     </div>
                 </div>
-                <nav className="hidden md:flex items-center gap-1">
-                    <button
-                        onClick={() => onNavigate('dashboard')}
-                        className="px-4 py-2 text-xs font-bold text-gray-400 hover:text-white transition-colors tracking-wide"
-                    >
-                        DASHBOARD
-                    </button>
-                    <button className="px-4 py-2 text-xs font-bold text-gray-400 hover:text-white transition-colors tracking-wide">
-                        CALL LOGS
-                    </button>
-                    <button
-                        onClick={() => onNavigate('contacts')}
-                        className="px-4 py-2 text-xs font-bold text-gray-400 hover:text-white transition-colors tracking-wide"
-                    >
-                        CONTACTS
-                    </button>
-                    <button className="relative px-4 py-2 text-xs font-bold text-primary transition-colors tracking-wide bg-primary/5 rounded border border-primary/20 shadow-neon">
-                        SETTINGS
-                        <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 bg-primary rounded-full shadow-[0_0_8px_#0de7f2]"></span>
-                    </button>
-                </nav>
+                <div className="hidden md:flex items-center gap-1">
+                    {/* Navigation removed in favor of global sidebar */}
+                </div>
                 <div className="flex items-center gap-4">
                     <button className="relative group flex items-center justify-center size-9 rounded-full bg-surface-dark border border-white/10 hover:border-primary/50 transition-all">
                         <span className="material-symbols-outlined text-gray-400 group-hover:text-primary text-xl">notifications</span>

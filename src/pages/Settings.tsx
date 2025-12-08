@@ -1,19 +1,13 @@
 import React from 'react';
 import { SettingsHeader } from '../components/settings/SettingsHeader';
 
-interface SettingsProps {
-    onNavigate: (view: 'dashboard' | 'contacts' | 'settings') => void;
-}
+interface SettingsProps { }
 
-export const Settings: React.FC<SettingsProps> = ({ onNavigate }) => {
+export const Settings: React.FC<SettingsProps> = () => {
     return (
-        <div className="bg-background-light dark:bg-background-dark text-slate-800 dark:text-white font-display min-h-screen flex flex-col overflow-x-hidden selection:bg-primary selection:text-black relative">
-            {/* Background Effects */}
-            <div className="fixed inset-0 z-0 pointer-events-none bg-grid-pattern bg-[length:40px_40px] opacity-20"></div>
-            <div className="fixed top-0 left-0 w-full h-full z-0 pointer-events-none bg-[radial-gradient(circle_at_15%_50%,_rgba(188,19,254,0.06),_transparent_40%),_radial-gradient(circle_at_85%_30%,_rgba(13,231,242,0.06),_transparent_40%)]"></div>
-
+        <div className="text-slate-800 dark:text-white font-display h-full flex flex-col overflow-x-hidden selection:bg-primary selection:text-black relative">
             <div className="relative z-10 flex flex-col h-full grow">
-                <SettingsHeader onNavigate={onNavigate} />
+                <SettingsHeader />
 
                 <main className="flex-1 w-full max-w-[1200px] mx-auto p-6 md:p-10 flex flex-col gap-8">
                     {/* Page Header */}

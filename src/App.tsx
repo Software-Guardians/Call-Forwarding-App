@@ -6,6 +6,7 @@ import { Contacts } from "./pages/Contacts";
 import { ActiveCall } from "./pages/ActiveCall";
 import { IncomingCallOverlay } from "./components/overlay/IncomingCallOverlay";
 import { Settings } from "./pages/Settings";
+import { Layout } from "./layouts/Layout";
 
 type View = 'dashboard' | 'dialer' | 'contacts' | 'active-call' | 'settings';
 
@@ -40,7 +41,7 @@ function App() {
 
   return (
     <>
-      <div className="relative z-0">
+      <Layout currentView={currentView} onNavigate={(view) => setCurrentView(view)}>
         {currentView === 'dashboard' && (
           <Dashboard
             onDialpadClick={() => setCurrentView('dialer')}
@@ -49,13 +50,10 @@ function App() {
           />
         )}
         {currentView === 'dialer' && (
-          <Dialer
-            onBack={() => setCurrentView('dashboard')}
-          />
+          <Dialer />
         )}
         {currentView === 'contacts' && (
           <Contacts
-            onNavigate={(view) => setCurrentView(view)}
             onCallStart={startCall}
           />
         )}
@@ -66,11 +64,9 @@ function App() {
           />
         )}
         {currentView === 'settings' && (
-          <Settings
-            onNavigate={(view) => setCurrentView(view)}
-          />
+          <Settings />
         )}
-      </div>
+      </Layout>
 
       {incomingCall && (
         <IncomingCallOverlay

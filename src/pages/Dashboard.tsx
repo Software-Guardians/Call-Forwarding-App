@@ -15,13 +15,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ onDialpadClick, onContacts
     // Placeholder actions
 
     return (
-        <div className="bg-[#111818] dark:bg-deep-void min-h-screen flex items-center justify-center font-display overflow-hidden relative">
-            {/* Background Ambiance */}
-            <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                <div className="absolute -top-[20%] -left-[10%] w-[50%] h-[50%] bg-secondary-accent/20 rounded-full blur-[120px]"></div>
-                <div className="absolute top-[40%] -right-[10%] w-[40%] h-[40%] bg-primary/10 rounded-full blur-[100px]"></div>
-            </div>
-
+        <div className="h-full flex items-center justify-center font-display overflow-hidden relative">
             {/* Main Dashboard Window */}
             <main className="relative w-full max-w-[400px] h-[640px] flex flex-col glass-panel rounded-xl overflow-hidden shadow-2xl ring-1 ring-white/5">
                 <DashboardHeader />
