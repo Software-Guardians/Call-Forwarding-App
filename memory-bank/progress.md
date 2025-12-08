@@ -24,7 +24,7 @@
 - [x] **Step 3**: **Contacts**. Port `contacts_screen_2`. (Grid layout, Search).
 - [x] **Step 4**: **Active Call**. Port `active_call_screen_2`. (Timer, Controls, Waveform).
 - [x] **Step 5**: **Incoming Call Overlay**. Port `incoming_call_overlay_2`. (Transparent popup).
-- [ ] **Step 6**: **Settings**. Port `settings_screen_2`. (Config tabs).
+- [x] **Step 6**: **Settings**. Port `settings_screen_2`. (Config tabs).
 
 ### Phase 3: Rust Backend Integration
 

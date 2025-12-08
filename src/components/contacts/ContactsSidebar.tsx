@@ -2,7 +2,7 @@ import React from 'react';
 
 interface ContactsSidebarProps {
     currentView?: string;
-    onNavigate: (view: 'dashboard' | 'contacts' | 'dialer') => void;
+    onNavigate: (view: 'dashboard' | 'contacts' | 'dialer' | 'settings') => void;
 }
 
 export const ContactsSidebar: React.FC<ContactsSidebarProps> = ({ onNavigate }) => {
@@ -59,7 +59,10 @@ export const ContactsSidebar: React.FC<ContactsSidebarProps> = ({ onNavigate }) 
 
                 <div className="flex-1"></div> {/* Spacer */}
 
-                <button className={`group flex items-center gap-4 px-3 py-3 rounded-lg text-slate-400 hover:text-white hover:bg-white/5 transition-all w-full text-left`}>
+                <button
+                    onClick={() => onNavigate('settings')}
+                    className={`group flex items-center gap-4 px-3 py-3 rounded-lg text-slate-400 hover:text-white hover:bg-white/5 transition-all w-full text-left`}
+                >
                     <span className="material-symbols-outlined group-hover:text-secondary transition-colors">settings</span>
                     <span className="hidden lg:block text-sm font-medium tracking-wide">SYSTEM</span>
                 </button>

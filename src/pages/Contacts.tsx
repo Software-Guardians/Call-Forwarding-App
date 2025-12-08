@@ -4,7 +4,7 @@ import { ContactsHeader } from '../components/contacts/ContactsHeader';
 import { ContactsGrid } from '../components/contacts/ContactsGrid';
 
 interface ContactsPageProps {
-    onNavigate: (view: 'dashboard' | 'contacts' | 'dialer') => void;
+    onNavigate: (view: 'dashboard' | 'contacts' | 'dialer' | 'settings') => void;
     onCallStart: (name: string) => void;
 }
 

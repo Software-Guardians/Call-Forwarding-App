@@ -5,8 +5,9 @@ import { Dialer } from "./pages/Dialer";
 import { Contacts } from "./pages/Contacts";
 import { ActiveCall } from "./pages/ActiveCall";
 import { IncomingCallOverlay } from "./components/overlay/IncomingCallOverlay";
+import { Settings } from "./pages/Settings";
 
-type View = 'dashboard' | 'dialer' | 'contacts' | 'active-call';
+type View = 'dashboard' | 'dialer' | 'contacts' | 'active-call' | 'settings';
 
 function App() {
   const [currentView, setCurrentView] = useState<View>('dashboard');
@@ -62,6 +63,11 @@ function App() {
           <ActiveCall
             contactName={activeContact}
             onEndCall={() => setCurrentView('contacts')}
+          />
+        )}
+        {currentView === 'settings' && (
+          <Settings
+            onNavigate={(view) => setCurrentView(view)}
           />
         )}
       </div>
