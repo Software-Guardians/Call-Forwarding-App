@@ -41,13 +41,13 @@ export const Settings: React.FC<SettingsProps> = () => {
                                     Bluetooth
                                 </h2>
                             </div>
-                            <div className="bg-white dark:bg-surface-dark/50 rounded-lg p-6 border border-gray-300 dark:border-white/10 shadow-md dark:shadow-none transition-shadow hover:shadow-lg dark:hover:shadow-none">
+                            <div className="bg-slate-900 dark:bg-surface-dark/50 rounded-lg p-6 border border-slate-800 dark:border-white/10 shadow-md dark:shadow-none transition-shadow hover:shadow-lg dark:hover:shadow-none">
                                 <div className="flex flex-col md:flex-row items-center justify-between gap-4">
                                     <div>
-                                        <h3 className="font-bold text-slate-900 dark:text-white text-lg">Connected Devices</h3>
-                                        <p className="text-sm text-slate-600 dark:text-gray-400 font-medium">Manage paired devices or scan for new ones.</p>
+                                        <h3 className="font-bold text-white text-lg">Connected Devices</h3>
+                                        <p className="text-sm text-gray-400 font-medium">Manage paired devices or scan for new ones.</p>
                                     </div>
-                                    <button className="group relative overflow-hidden rounded bg-primary/10 border border-primary/40 px-6 py-2.5 text-sm font-bold text-primary tracking-widest hover:bg-primary hover:text-black transition-all duration-300 shadow-neon">
+                                    <button className="group relative overflow-hidden rounded bg-white dark:bg-primary/10 border border-white/20 dark:border-primary/40 px-6 py-2.5 text-sm font-bold text-slate-900 dark:text-primary tracking-widest hover:bg-gray-100 dark:hover:bg-primary dark:hover:text-black transition-all duration-300 shadow-neon">
                                         <span className="relative z-10 flex items-center justify-center gap-2">
                                             <span className="material-symbols-outlined text-lg">search</span>
                                             Re-scan
@@ -65,11 +65,11 @@ export const Settings: React.FC<SettingsProps> = () => {
                                     Theme
                                 </h2>
                             </div>
-                            <div className="bg-white dark:bg-surface-dark/50 rounded-lg p-6 border border-gray-300 dark:border-white/10 shadow-md dark:shadow-none transition-shadow hover:shadow-lg dark:hover:shadow-none">
+                            <div className="bg-slate-900 dark:bg-surface-dark/50 rounded-lg p-6 border border-slate-800 dark:border-white/10 shadow-md dark:shadow-none transition-shadow hover:shadow-lg dark:hover:shadow-none">
                                 <div className="flex flex-col md:flex-row items-center justify-between gap-4">
                                     <div>
-                                        <h3 className="font-bold text-slate-900 dark:text-white text-lg">Appearance</h3>
-                                        <p className="text-sm text-slate-600 dark:text-gray-400 font-medium">Switch between light and dark system themes.</p>
+                                        <h3 className="font-bold text-white text-lg">Appearance</h3>
+                                        <p className="text-sm text-gray-400 font-medium">Switch between light and dark system themes.</p>
                                     </div>
                                     {/* Custom Toggle */}
                                     <div className="relative inline-block w-14 align-middle select-none transition duration-200 ease-in">
@@ -77,11 +77,11 @@ export const Settings: React.FC<SettingsProps> = () => {
                                             type="checkbox"
                                             name="toggle"
                                             id="theme-toggle"
-                                            className="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 border-surface-dark appearance-none cursor-pointer transition-all duration-300 top-0 shadow-sm"
+                                            className="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 border-slate-900 dark:border-surface-dark appearance-none cursor-pointer transition-all duration-300 top-0 shadow-sm"
                                             checked={theme === 'dark'}
                                             onChange={toggleTheme}
                                         />
-                                        <label htmlFor="theme-toggle" className="toggle-label block overflow-hidden h-6 rounded-full bg-gray-400 dark:bg-gray-800 cursor-pointer border border-gray-400 dark:border-white/10"></label>
+                                        <label htmlFor="theme-toggle" className="toggle-label block overflow-hidden h-6 rounded-full bg-gray-600 dark:bg-gray-800 cursor-pointer border border-gray-500 dark:border-white/10"></label>
                                     </div>
                                 </div>
                             </div>
@@ -96,10 +96,10 @@ export const Settings: React.FC<SettingsProps> = () => {
                                 </h2>
                             </div>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                <div className="bg-white dark:bg-surface-dark/50 rounded-lg p-6 border border-gray-300 dark:border-white/10 shadow-md dark:shadow-none transition-shadow hover:shadow-lg dark:hover:shadow-none">
-                                    <label className="block text-sm font-bold text-slate-700 dark:text-gray-200 mb-2 uppercase tracking-wider">Input Device</label>
+                                <div className="bg-slate-900 dark:bg-surface-dark/50 rounded-lg p-6 border border-slate-800 dark:border-white/10 shadow-md dark:shadow-none transition-shadow hover:shadow-lg dark:hover:shadow-none">
+                                    <label className="block text-sm font-bold text-gray-200 mb-2 uppercase tracking-wider">Input Device</label>
                                     <div className="relative">
-                                        <select className="block w-full rounded bg-gray-50 dark:bg-surface-dark border border-gray-300 dark:border-white/10 text-slate-900 dark:text-white py-2.5 pl-3 pr-10 text-sm focus:border-primary focus:ring-1 focus:ring-primary font-mono tracking-tight appearance-none font-medium">
+                                        <select className="block w-full rounded bg-gray-100 dark:bg-surface-dark border border-gray-600 dark:border-white/10 text-slate-900 dark:text-white py-2.5 pl-3 pr-10 text-sm focus:border-primary focus:ring-1 focus:ring-primary font-mono tracking-tight appearance-none font-medium">
                                             <option>Microphone Array (Realtek Audio)</option>
                                             <option>Headset Mic (Pixel 8 Pro)</option>
                                             <option>External USB Mic</option>
@@ -109,10 +109,10 @@ export const Settings: React.FC<SettingsProps> = () => {
                                         </div>
                                     </div>
                                 </div>
-                                <div className="bg-white dark:bg-surface-dark/50 rounded-lg p-6 border border-gray-300 dark:border-white/10 shadow-md dark:shadow-none transition-shadow hover:shadow-lg dark:hover:shadow-none">
-                                    <label className="block text-sm font-bold text-slate-700 dark:text-gray-200 mb-2 uppercase tracking-wider">Output Device</label>
+                                <div className="bg-slate-900 dark:bg-surface-dark/50 rounded-lg p-6 border border-slate-800 dark:border-white/10 shadow-md dark:shadow-none transition-shadow hover:shadow-lg dark:hover:shadow-none">
+                                    <label className="block text-sm font-bold text-gray-200 mb-2 uppercase tracking-wider">Output Device</label>
                                     <div className="relative">
-                                        <select className="block w-full rounded bg-gray-50 dark:bg-surface-dark border border-gray-300 dark:border-white/10 text-slate-900 dark:text-white py-2.5 pl-3 pr-10 text-sm focus:border-primary focus:ring-1 focus:ring-primary font-mono tracking-tight appearance-none font-medium">
+                                        <select className="block w-full rounded bg-gray-100 dark:bg-surface-dark border border-gray-600 dark:border-white/10 text-slate-900 dark:text-white py-2.5 pl-3 pr-10 text-sm focus:border-primary focus:ring-1 focus:ring-primary font-mono tracking-tight appearance-none font-medium">
                                             <option>Speakers (Realtek Audio)</option>
                                             <option>Headphones (Logitech G733)</option>
                                         </select>
