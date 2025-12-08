@@ -1,7 +1,11 @@
 import React from 'react';
 import { ContactCard, ContactData } from './ContactCard';
 
-export const ContactsGrid: React.FC = () => {
+interface ContactsGridProps {
+    onCall: (name: string) => void;
+}
+
+export const ContactsGrid: React.FC<ContactsGridProps> = ({ onCall }) => {
     const contacts: ContactData[] = [
         {
             id: '1',
@@ -64,6 +68,7 @@ export const ContactsGrid: React.FC = () => {
 
     const handleCall = (name: string) => {
         console.log(`Calling ${name}...`);
+        onCall(name);
     };
 
     return (

@@ -5,9 +5,10 @@ import { ContactsGrid } from '../components/contacts/ContactsGrid';
 
 interface ContactsPageProps {
     onNavigate: (view: 'dashboard' | 'contacts' | 'dialer') => void;
+    onCallStart: (name: string) => void;
 }
 
-export const Contacts: React.FC<ContactsPageProps> = ({ onNavigate }) => {
+export const Contacts: React.FC<ContactsPageProps> = ({ onNavigate, onCallStart }) => {
     return (
         <div className="bg-background-light dark:bg-background-dark text-slate-200 font-display overflow-hidden h-screen w-full flex selection:bg-primary selection:text-black">
             <ContactsSidebar onNavigate={onNavigate} />
@@ -19,7 +20,7 @@ export const Contacts: React.FC<ContactsPageProps> = ({ onNavigate }) => {
                 <div className="absolute top-0 right-0 w-1/2 h-1/2 bg-secondary/5 blur-[120px] rounded-full pointer-events-none"></div>
 
                 <ContactsHeader />
-                <ContactsGrid />
+                <ContactsGrid onCall={onCallStart} />
             </main>
         </div>
     );
