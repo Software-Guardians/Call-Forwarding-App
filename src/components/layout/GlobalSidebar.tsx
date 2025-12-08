@@ -31,7 +31,7 @@ export const GlobalSidebar: React.FC<GlobalSidebarProps> = ({ currentView, onNav
         <aside className="w-20 lg:w-64 h-full flex flex-col border-r border-white/5 bg-[#080c10] z-20 transition-all duration-300 shrink-0">
             {/* Logo Area */}
             <div className="h-24 flex items-center gap-3 px-6 border-b border-white/5">
-                <div className="relative flex items-center justify-center shrink-0">
+                <div className="relative flex items-center justify-center shrink-0 animate-pulse">
                     <div className="absolute inset-0 bg-primary/20 blur-lg rounded-full"></div>
                     <div className="bg-center bg-no-repeat bg-cover rounded-full h-10 w-10 relative z-10 border border-primary/50" data-alt="Abstract neon geometric logo" style={{ backgroundImage: 'url("https://lh3.googleusercontent.com/aida-public/AB6AXuC4KhpL_y0-IGmnPZ7lZvnq913DvnQKgvAqdkNcnHIYPC3dBhxt5JUf--opgQ2V45BHmRYZAxLacz5Tb9a0ChT4qxpOP0mn1XScB8FrMMYXEEUcN4nXwpwnnGe5u-Ooaeev3GBS1NINx7xbSuBtZcvw5bDruoFGPmhFhIq0lvJz6LMT5cOwizejI-UviTuiXdd_9PGDUDgj4y6_p409PDULrpud7ofOeHte4koDpDQzZRWi4ZizTlRoJtvW3Hb2Ogidtct4EQRnvBci")' }}></div>
                 </div>
