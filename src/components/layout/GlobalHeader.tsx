@@ -13,8 +13,8 @@ export const GlobalHeader: React.FC = () => {
                     <span className="material-symbols-outlined text-green-400 !text-[16px]">bluetooth_connected</span>
                     <span className="text-xs font-mono text-primary tracking-widest">LINKED: PIXEL 7</span>
                 </div>
-                <div className="bg-center bg-no-repeat bg-cover rounded-full size-10 border border-gray-600 relative" style={{ backgroundImage: 'url("https://lh3.googleusercontent.com/aida-public/AB6AXuDkQwEAW1h7_7JE6OkezuH_WP-B9P3TjwRCzMQf27X-gOR1FkH480o6be2_elGKTBbKIDa7nqRzgtGBzdpQNmhkxe0XPPuqtSLMY9RSTJXPoY0rZeXGGveap1qXKA5VUhHAT6LTD6zBHIusBxu1zbDXhMn4NCLqIMh_mXVUxSvf2fjGljAykGwtS0vbFG7eVsEjZYWW1omuZVaWpF5V24EqvuKW03047EqycpB9If5U0VCMwM1aiQGkvlKM7_N9xlD9WDu6-IO3RWlS")' }}>
-                    <div className="absolute bottom-0 right-0 size-3 bg-green-500 rounded-full border-2 border-background-dark"></div>
+                <div className="bg-center bg-no-repeat bg-cover rounded-full size-10 border border-gray-300 dark:border-gray-600 relative shadow-sm dark:shadow-none" style={{ backgroundImage: 'url("https://lh3.googleusercontent.com/aida-public/AB6AXuDkQwEAW1h7_7JE6OkezuH_WP-B9P3TjwRCzMQf27X-gOR1FkH480o6be2_elGKTBbKIDa7nqRzgtGBzdpQNmhkxe0XPPuqtSLMY9RSTJXPoY0rZeXGGveap1qXKA5VUhHAT6LTD6zBHIusBxu1zbDXhMn4NCLqIMh_mXVUxSvf2fjGljAykGwtS0vbFG7eVsEjZYWW1omuZVaWpF5V24EqvuKW03047EqycpB9If5U0VCMwM1aiQGkvlKM7_N9xlD9WDu6-IO3RWlS")' }}>
+                    <div className="absolute bottom-0 right-0 size-3 bg-green-500 rounded-full border-2 border-white dark:border-background-dark"></div>
                 </div>
             </div>
         </header>
