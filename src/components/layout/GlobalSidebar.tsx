@@ -11,9 +11,9 @@ export const GlobalSidebar: React.FC<GlobalSidebarProps> = ({ currentView, onNav
     const getLinkClass = (viewName: string) => {
         const isActive = currentView === viewName;
         if (isActive) {
-            return "group flex items-center gap-4 px-3 py-3 rounded-lg bg-primary/10 text-primary border border-primary/20 shadow-[0_0_15px_rgba(0,240,255,0.1)] w-full text-left font-bold";
+            return "group flex items-center gap-4 px-3 py-3 rounded-lg bg-slate-800 dark:bg-primary/10 text-white dark:text-primary border border-slate-700 dark:border-primary/20 shadow-[0_0_15px_rgba(0,0,0,0.3)] dark:shadow-[0_0_15px_rgba(0,240,255,0.1)] w-full text-left font-bold";
         }
-        return "group flex items-center gap-4 px-3 py-3 rounded-lg text-slate-700 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-black/10 dark:hover:bg-white/5 transition-all w-full text-left font-bold dark:font-medium";
+        return "group flex items-center gap-4 px-3 py-3 rounded-lg text-slate-700 dark:text-slate-400 hover:text-white dark:hover:text-white hover:bg-slate-800 dark:hover:bg-white/5 transition-all w-full text-left font-bold dark:font-medium";
     };
 
     const getIconClass = (viewName: string) => {
