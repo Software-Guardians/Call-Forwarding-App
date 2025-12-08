@@ -9,6 +9,11 @@ export const GlobalHeader: React.FC = () => {
                 </div>
             </div>
             <div className="flex flex-1 justify-end gap-6 items-center">
+                <button className="relative group flex items-center justify-center size-9 rounded-full bg-slate-100 dark:bg-surface-dark border border-gray-300 dark:border-white/10 hover:border-primary/50 transition-all shadow-sm dark:shadow-none">
+                    <span className="material-symbols-outlined text-slate-600 dark:text-gray-400 group-hover:text-primary text-xl">notifications</span>
+                    <span className="absolute top-0 right-0 size-2 bg-secondary rounded-full border-2 border-white dark:border-background-dark"></span>
+                </button>
+                <div className="h-9 w-px bg-gray-300 dark:bg-white/10 mx-[-0.5rem]"></div>
                 <div className="hidden md:flex items-center gap-2 px-3 py-1 rounded-full border border-primary/20 bg-primary/5">
                     <span className="material-symbols-outlined text-green-400 !text-[16px]">bluetooth_connected</span>
                     <span className="text-xs font-mono text-primary tracking-widest">LINKED: PIXEL 7</span>
