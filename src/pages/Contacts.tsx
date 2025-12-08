@@ -8,7 +8,7 @@ interface ContactsPageProps {
 
 export const Contacts: React.FC<ContactsPageProps> = ({ onCallStart }) => {
     return (
-        <div className="text-slate-200 font-display overflow-hidden h-full w-full flex selection:bg-primary selection:text-black">
+        <div className="text-slate-900 dark:text-slate-200 font-display overflow-hidden h-full w-full flex selection:bg-primary selection:text-black">
             {/* Main Content Area */}
             <main className="flex-1 flex flex-col relative h-full min-w-0">
                 <ContactsHeader />

@@ -19,7 +19,7 @@ export const Dialer: React.FC<DialerPageProps> = () => {
     };
 
     return (
-        <div className="text-white font-body selection:bg-primary selection:text-black overflow-x-hidden h-full flex flex-col relative">
+        <div className="text-slate-900 dark:text-white font-body selection:bg-primary selection:text-black overflow-x-hidden h-full flex flex-col relative">
             {/* Main Content Wrapper */}
             <div className="relative z-10 flex h-full grow flex-col">
                 <DialerHeader />
@@ -34,7 +34,7 @@ export const Dialer: React.FC<DialerPageProps> = () => {
                         <div className="absolute bottom-0 right-0 w-16 h-16 border-b-2 border-r-2 border-primary/50 rounded-br-2xl z-20"></div>
 
                         {/* Inner Content Container */}
-                        <div className="bg-background-dark/90 rounded-[20px] flex flex-col h-full border border-white/5 relative z-10 p-6 shadow-inner">
+                        <div className="bg-white dark:bg-background-dark/90 rounded-[20px] flex flex-col h-full border border-gray-200 dark:border-white/5 relative z-10 p-6 shadow-md dark:shadow-inner transition-colors duration-300">
                             <DialerDisplay value={number} onBackspace={handleBackspace} />
                             <DialerKeypad onKeyPress={handleKeyPress} />
                             <DialerActions />
