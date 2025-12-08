@@ -8,9 +8,10 @@ import { DashboardFooter } from '../components/dashboard/DashboardFooter';
 interface DashboardProps {
     onDialpadClick?: () => void;
     onContactsClick?: () => void;
+    onSimulateIncomingCall?: () => void;
 }
 
-export const Dashboard: React.FC<DashboardProps> = ({ onDialpadClick, onContactsClick }) => {
+export const Dashboard: React.FC<DashboardProps> = ({ onDialpadClick, onContactsClick, onSimulateIncomingCall }) => {
     // Placeholder actions
 
     return (
@@ -27,7 +28,11 @@ export const Dashboard: React.FC<DashboardProps> = ({ onDialpadClick, onContacts
 
                 {/* Body Content */}
                 <div className="flex-1 flex flex-col p-6 gap-6 overflow-y-auto">
-                    <ActionButtons onDialpadClick={onDialpadClick} onContactsClick={onContactsClick} />
+                    <ActionButtons
+                        onDialpadClick={onDialpadClick}
+                        onContactsClick={onContactsClick}
+                        onSimulateCall={onSimulateIncomingCall}
+                    />
                     <LiveConsole />
                     <QuickStats />
                 </div>

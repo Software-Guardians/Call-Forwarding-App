@@ -26,6 +26,7 @@ export default {
             boxShadow: {
                 "neon": "0 0 10px rgb(var(--color-primary) / 0.5), 0 0 20px rgb(var(--color-primary) / 0.3)",
                 "neon-green": "0 0 15px rgb(var(--color-accent-green) / 0.5), 0 0 30px rgb(var(--color-accent-green) / 0.3)",
+                "neon-red": "0 0 15px rgba(239, 68, 68, 0.5), 0 0 30px rgba(239, 68, 68, 0.3)",
                 "glass": "0 8px 32px 0 rgba(0, 0, 0, 0.37)",
             },
             backgroundImage: {
@@ -36,9 +37,15 @@ export default {
                     "0%": { transform: "translateX(-200%) skewX(-12deg)" },
                     "100%": { transform: "translateX(200%) skewX(-12deg)" },
                 },
+                shake: {
+                    "0%, 100%": { transform: "translateX(0)" },
+                    "25%": { transform: "translateX(-4px)" },
+                    "75%": { transform: "translateX(4px)" },
+                },
             },
             animation: {
                 shine: "shine 1s ease-in-out infinite",
+                shake: "shake 0.5s ease-in-out infinite",
             },
         },
     },

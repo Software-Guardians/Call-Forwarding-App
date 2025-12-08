@@ -4,41 +4,74 @@ import { Dashboard } from "./pages/Dashboard";
 import { Dialer } from "./pages/Dialer";
 import { Contacts } from "./pages/Contacts";
 import { ActiveCall } from "./pages/ActiveCall";
+import { IncomingCallOverlay } from "./components/overlay/IncomingCallOverlay";
 
 type View = 'dashboard' | 'dialer' | 'contacts' | 'active-call';
 
 function App() {
   const [currentView, setCurrentView] = useState<View>('dashboard');
   const [activeContact, setActiveContact] = useState<string | undefined>(undefined);
+  const [incomingCall, setIncomingCall] = useState<{ name: string, number: string } | null>(null);
 
   const startCall = (name: string) => {
     setActiveContact(name);
     setCurrentView('active-call');
   };
 
+  const simulateIncomingCall = () => {
+    setIncomingCall({
+      name: "Unknown Caller",
+      number: "+1 (555) 999-0000"
+    });
+  };
+
+  const handleAcceptCall = () => {
+    if (incomingCall) {
+      setActiveContact(incomingCall.name);
+      setCurrentView('active-call');
+      setIncomingCall(null);
+    }
+  };
+
+  const handleDeclineCall = () => {
+    setIncomingCall(null);
+  };
+
   return (
     <>
-      {currentView === 'dashboard' && (
-        <Dashboard
-          onDialpadClick={() => setCurrentView('dialer')}
-          onContactsClick={() => setCurrentView('contacts')}
-        />
-      )}
-      {currentView === 'dialer' && (
-        <Dialer
-          onBack={() => setCurrentView('dashboard')}
-        />
-      )}
-      {currentView === 'contacts' && (
-        <Contacts
-          onNavigate={(view) => setCurrentView(view)}
-          onCallStart={startCall}
-        />
-      )}
-      {currentView === 'active-call' && (
-        <ActiveCall
-          contactName={activeContact}
-          onEndCall={() => setCurrentView('contacts')}
+      <div className="relative z-0">
+        {currentView === 'dashboard' && (
+          <Dashboard
+            onDialpadClick={() => setCurrentView('dialer')}
+            onContactsClick={() => setCurrentView('contacts')}
+            onSimulateIncomingCall={simulateIncomingCall}
+          />
+        )}
+        {currentView === 'dialer' && (
+          <Dialer
+            onBack={() => setCurrentView('dashboard')}
+          />
+        )}
+        {currentView === 'contacts' && (
+          <Contacts
+            onNavigate={(view) => setCurrentView(view)}
+            onCallStart={startCall}
+          />
+        )}
+        {currentView === 'active-call' && (
+          <ActiveCall
+            contactName={activeContact}
+            onEndCall={() => setCurrentView('contacts')}
+          />
+        )}
+      </div>
+
+      {incomingCall && (
+        <IncomingCallOverlay
+          callerName={incomingCall.name}
+          callerNumber={incomingCall.number}
+          onAccept={handleAcceptCall}
+          onDecline={handleDeclineCall}
         />
       )}
     </>

@@ -3,9 +3,10 @@ import React from 'react';
 interface ActionButtonsProps {
     onDialpadClick?: () => void;
     onContactsClick?: () => void;
+    onSimulateCall?: () => void;
 }
 
-export const ActionButtons: React.FC<ActionButtonsProps> = ({ onDialpadClick, onContactsClick }) => {
+export const ActionButtons: React.FC<ActionButtonsProps> = ({ onDialpadClick, onContactsClick, onSimulateCall }) => {
     return (
         <div className="flex flex-col gap-3">
             {/* Large Dialpad Button */}
@@ -26,6 +27,18 @@ export const ActionButtons: React.FC<ActionButtonsProps> = ({ onDialpadClick, on
                 <div className="flex items-center gap-3">
                     <span className="material-symbols-outlined text-gray-400">contacts</span>
                     <span className="text-sm font-bold tracking-wide">CONTACTS</span>
+                </div>
+                <span className="material-symbols-outlined text-gray-500 text-sm">chevron_right</span>
+            </button>
+
+            {/* Simulate Call Button */}
+            <button
+                onClick={onSimulateCall}
+                className="flex items-center justify-between w-full h-12 px-5 rounded-lg bg-[#283839]/40 hover:bg-[#283839]/80 border border-white/10 hover:border-white/20 text-gray-200 transition-all"
+            >
+                <div className="flex items-center gap-3">
+                    <span className="material-symbols-outlined text-gray-400">ring_volume</span>
+                    <span className="text-sm font-bold tracking-wide">INCOMING TEST</span>
                 </div>
                 <span className="material-symbols-outlined text-gray-500 text-sm">chevron_right</span>
             </button>
