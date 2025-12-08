@@ -2,7 +2,7 @@ import React from 'react';
 
 export const GlobalHeader: React.FC = () => {
     return (
-        <header className="flex items-center justify-between whitespace-nowrap px-6 py-4 sticky top-0 z-50">
+        <header className="flex items-center justify-between whitespace-nowrap px-6 py-4 sticky top-0 z-50 bg-slate-200 dark:bg-transparent">
             <div className="flex items-center gap-4 text-slate-800 dark:text-white">
                 <div>
                     {/* Title and Version removed as per user request */}

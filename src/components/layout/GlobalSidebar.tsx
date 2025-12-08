@@ -11,9 +11,9 @@ export const GlobalSidebar: React.FC<GlobalSidebarProps> = ({ currentView, onNav
     const getLinkClass = (viewName: string) => {
         const isActive = currentView === viewName;
         if (isActive) {
-            return "group flex items-center gap-4 px-3 py-3 rounded-lg bg-primary/10 text-primary border border-primary/20 shadow-[0_0_15px_rgba(0,240,255,0.1)] w-full text-left";
+            return "group flex items-center gap-4 px-3 py-3 rounded-lg bg-primary/10 text-primary border border-primary/20 shadow-[0_0_15px_rgba(0,240,255,0.1)] w-full text-left font-bold";
         }
-        return "group flex items-center gap-4 px-3 py-3 rounded-lg text-slate-700 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-black/10 dark:hover:bg-white/5 transition-all w-full text-left font-medium";
+        return "group flex items-center gap-4 px-3 py-3 rounded-lg text-slate-700 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-black/10 dark:hover:bg-white/5 transition-all w-full text-left font-bold dark:font-medium";
     };
 
     const getIconClass = (viewName: string) => {
@@ -28,7 +28,7 @@ export const GlobalSidebar: React.FC<GlobalSidebarProps> = ({ currentView, onNav
 
 
     return (
-        <aside className="w-20 lg:w-64 h-full flex flex-col border-r border-gray-300 dark:border-white/5 bg-white dark:bg-[#080c10] z-20 transition-all duration-300 shrink-0 shadow-sm dark:shadow-none">
+        <aside className="w-20 lg:w-64 h-full flex flex-col border-r border-gray-300 dark:border-white/5 bg-slate-200 dark:bg-[#080c10] z-20 transition-all duration-300 shrink-0 shadow-sm dark:shadow-none">
             {/* Logo Area */}
             <div className="h-24 flex items-center gap-3 px-6 border-b border-gray-300 dark:border-white/5">
                 <div className="relative flex items-center justify-center shrink-0 animate-pulse">
@@ -66,7 +66,7 @@ export const GlobalSidebar: React.FC<GlobalSidebarProps> = ({ currentView, onNav
                     <span className={getTextClass('dialer')}>KEYPAD</span>
                 </button>
 
-                <button className="group flex items-center gap-4 px-3 py-3 rounded-lg text-slate-700 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-black/10 dark:hover:bg-white/5 transition-all w-full text-left font-medium">
+                <button className="group flex items-center gap-4 px-3 py-3 rounded-lg text-slate-700 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-black/10 dark:hover:bg-white/5 transition-all w-full text-left font-bold dark:font-medium">
                     <span className="material-symbols-outlined text-slate-500 dark:text-inherit group-hover:text-primary transition-colors">history</span>
                     <span className="hidden lg:block text-sm font-medium tracking-wide">HISTORY</span>
                 </button>
