@@ -7,11 +7,11 @@ import { DashboardFooter } from '../components/dashboard/DashboardFooter';
 
 interface DashboardProps {
     onDialpadClick?: () => void;
+    onContactsClick?: () => void;
 }
 
-export const Dashboard: React.FC<DashboardProps> = ({ onDialpadClick }) => {
+export const Dashboard: React.FC<DashboardProps> = ({ onDialpadClick, onContactsClick }) => {
     // Placeholder actions
-    const handleContactsClick = () => console.log('Contacts clicked');
 
     return (
         <div className="bg-[#111818] dark:bg-deep-void min-h-screen flex items-center justify-center font-display overflow-hidden relative">
@@ -27,7 +27,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ onDialpadClick }) => {
 
                 {/* Body Content */}
                 <div className="flex-1 flex flex-col p-6 gap-6 overflow-y-auto">
-                    <ActionButtons onDialpadClick={onDialpadClick} onContactsClick={handleContactsClick} />
+                    <ActionButtons onDialpadClick={onDialpadClick} onContactsClick={onContactsClick} />
                     <LiveConsole />
                     <QuickStats />
                 </div>
