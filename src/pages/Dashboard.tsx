@@ -17,7 +17,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ onDialpadClick, onContacts
     return (
         <div className="h-full flex items-center justify-center font-display overflow-hidden relative">
             {/* Main Dashboard Window */}
-            <main className="relative w-full max-w-[400px] h-[640px] flex flex-col glass-panel rounded-xl overflow-hidden shadow-2xl ring-1 ring-white/5">
+            <main className="relative w-full max-w-[400px] h-[640px] flex flex-col bg-slate-900 dark:bg-transparent dark:glass-panel rounded-xl overflow-hidden shadow-2xl ring-1 ring-white/5 text-white">
                 <DashboardHeader />
 
                 {/* Body Content */}

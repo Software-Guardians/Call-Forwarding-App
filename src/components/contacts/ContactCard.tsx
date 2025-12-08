@@ -18,7 +18,7 @@ export const ContactCard: React.FC<ContactCardProps> = ({ contact, onCall }) => 
     const isSecondary = contact.theme === 'secondary';
 
     return (
-        <div className={`group relative bg-[#0e151a]/60 hover:bg-[#0e151a] border border-white/5 ${isSecondary ? 'hover:border-secondary/50' : 'hover:border-primary/50'} transition-all duration-300 rounded-xl p-4 flex items-center justify-between overflow-hidden`}>
+        <div className={`group relative bg-slate-900 dark:bg-[#0e151a]/60 hover:bg-slate-800 dark:hover:bg-[#0e151a] border border-slate-800 dark:border-white/5 ${isSecondary ? 'hover:border-secondary/50' : 'hover:border-primary/50'} transition-all duration-300 rounded-xl p-4 flex items-center justify-between overflow-hidden shadow-md dark:shadow-none`}>
             {/* Hover Glow Effect */}
             <div className={`absolute top-0 right-0 w-20 h-20 ${isSecondary ? 'bg-secondary/10' : 'bg-primary/10'} blur-2xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none`}></div>
             <div className={`absolute left-0 top-0 bottom-0 w-1 ${isSecondary ? 'bg-secondary' : 'bg-primary'} opacity-0 group-hover:opacity-100 transition-opacity duration-300`}></div>

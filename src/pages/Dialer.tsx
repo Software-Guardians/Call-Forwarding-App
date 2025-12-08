@@ -34,7 +34,7 @@ export const Dialer: React.FC<DialerPageProps> = () => {
                         <div className="absolute bottom-0 right-0 w-16 h-16 border-b-2 border-r-2 border-primary/50 rounded-br-2xl z-20"></div>
 
                         {/* Inner Content Container */}
-                        <div className="bg-white dark:bg-background-dark/90 rounded-[20px] flex flex-col h-full border border-gray-200 dark:border-white/5 relative z-10 p-6 shadow-md dark:shadow-inner transition-colors duration-300">
+                        <div className="bg-slate-900 dark:bg-background-dark/90 rounded-[20px] flex flex-col h-full border border-slate-800 dark:border-white/5 relative z-10 p-6 shadow-md dark:shadow-inner transition-colors duration-300">
                             <DialerDisplay value={number} onBackspace={handleBackspace} />
                             <DialerKeypad onKeyPress={handleKeyPress} />
                             <DialerActions />
