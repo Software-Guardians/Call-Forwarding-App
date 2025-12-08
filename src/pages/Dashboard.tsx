@@ -5,9 +5,12 @@ import { LiveConsole } from '../components/dashboard/LiveConsole';
 import { QuickStats } from '../components/dashboard/QuickStats';
 import { DashboardFooter } from '../components/dashboard/DashboardFooter';
 
-export const Dashboard: React.FC = () => {
+interface DashboardProps {
+    onDialpadClick?: () => void;
+}
+
+export const Dashboard: React.FC<DashboardProps> = ({ onDialpadClick }) => {
     // Placeholder actions
-    const handleDialpadClick = () => console.log('Dialpad clicked');
     const handleContactsClick = () => console.log('Contacts clicked');
 
     return (
@@ -24,7 +27,7 @@ export const Dashboard: React.FC = () => {
 
                 {/* Body Content */}
                 <div className="flex-1 flex flex-col p-6 gap-6 overflow-y-auto">
-                    <ActionButtons onDialpadClick={handleDialpadClick} onContactsClick={handleContactsClick} />
+                    <ActionButtons onDialpadClick={onDialpadClick} onContactsClick={handleContactsClick} />
                     <LiveConsole />
                     <QuickStats />
                 </div>

@@ -20,7 +20,7 @@
 ### Phase 2: Core UI Components (Porting from UI-Template)
 
 - [x] **Step 1**: **Main Dashboard**. Port `main_dashboard_2`. (Framework, Sidebar, Header).
-- [ ] **Step 2**: **Dialer**. Port `dialer_screen_2`. (Numpad, Input, Shine effects).
+- [x] **Step 2**: **Dialer**. Port `dialer_screen_2`. (Numpad, Input, Shine effects).
 - [ ] **Step 3**: **Contacts**. Port `contacts_screen_2`. (Grid layout, Search).
 - [ ] **Step 4**: **Active Call**. Port `active_call_screen_2`. (Timer, Controls, Waveform).
 - [ ] **Step 5**: **Incoming Call Overlay**. Port `incoming_call_overlay_2`. (Transparent popup).

@@ -30,7 +30,16 @@ export default {
             },
             backgroundImage: {
                 "grid-pattern": "linear-gradient(to right, #1f2937 1px, transparent 1px), linear-gradient(to bottom, #1f2937 1px, transparent 1px)",
-            }
+            },
+            keyframes: {
+                shine: {
+                    "0%": { transform: "translateX(-200%) skewX(-12deg)" },
+                    "100%": { transform: "translateX(200%) skewX(-12deg)" },
+                },
+            },
+            animation: {
+                shine: "shine 1s ease-in-out infinite",
+            },
         },
     },
     plugins: [],
