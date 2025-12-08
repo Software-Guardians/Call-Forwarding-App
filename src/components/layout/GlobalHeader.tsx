@@ -8,8 +8,7 @@ export const GlobalHeader: React.FC = () => {
                     <span className="material-symbols-outlined !text-[32px]">hub</span>
                 </div>
                 <div>
-                    <h2 className="text-white text-xl font-display font-bold leading-tight tracking-wider">AURA LINK <span className="text-primary">//</span> DESKTOP</h2>
-                    <p className="text-[10px] text-gray-400 font-mono tracking-widest uppercase">Ver 2.4.0 // Stable</p>
+                    {/* Title and Version removed as per user request */}
                 </div>
             </div>
             <div className="flex flex-1 justify-end gap-6 items-center">
