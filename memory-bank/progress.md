@@ -37,7 +37,14 @@
 - [x] **Step 1**: Protocol Structs requirements for Rust (Serde).
 - [x] **Step 2**: Implement Bluetooth Socket Reader/Writer using `protocol.rs` (Simulated Handshake).
 - [x] **Step 3**: Connect Frontend to `call-state-update` event (React Hook + IncomingCallOverlay).
-- [ ] **Step 4**: Verify End-to-End Simulation (Connect -> Ringing -> UI Overlay).ed and Setup `cpal`).
+- [x] **Step 4**: Verify End-to-End Simulation (Connect -> Ringing -> UI Overlay).
+- [x] **Phase 5 Complete**: Protocol Handshake (Simulated) is fully operational.
+
+### Phase 6: Core Logic Implementation (Real Device Integration)
+
+- [ ] **Step 1**: Implement real Bluetooth Socket connection (RFCOMM).
+- [ ] **Step 2**: Replace simulated data with real socket data.
+- [ ] **Step 3**: Implement Audio Stream bridging (if needed).ed and Setup `cpal`).
 - [x] **Step 4**: Wire "Connect" button in UI to Main process (Invokes `start_scan`).
 
 ### Phase 5: Protocol Handshake
