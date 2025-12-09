@@ -12,8 +12,12 @@ interface DashboardProps {
 }
 
 import { invoke } from '@tauri-apps/api/core';
+import { useCallState } from '../hooks/useCallState';
+import { IncomingCallOverlay } from '../components/overlays/IncomingCallOverlay';
 
 export const Dashboard: React.FC<DashboardProps> = ({ onDialpadClick, onContactsClick, onSimulateIncomingCall }) => {
+    const { callState, callerNumber } = useCallState();
+
     const handleConnect = async () => {
         try {
             console.log('Initiating Bluetooth scan...');
@@ -28,6 +32,12 @@ export const Dashboard: React.FC<DashboardProps> = ({ onDialpadClick, onContacts
         <div className="h-full flex items-center justify-center font-display overflow-hidden relative">
             {/* Main Dashboard Window */}
             <main className="relative w-full max-w-[400px] h-[640px] flex flex-col bg-slate-900 dark:bg-transparent dark:glass-panel rounded-xl overflow-hidden shadow-2xl ring-1 ring-white/5 text-white">
+
+                {/* Overlays */}
+                {callState === 'RINGING' && (
+                    <IncomingCallOverlay callerNumber={callerNumber} />
+                )}
+
                 <DashboardHeader />
 
                 {/* Body Content */}
