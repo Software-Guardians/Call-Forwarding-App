@@ -30,7 +30,7 @@
 
 - [x] **Step 1**: Setup Rust environment and `tauri.conf.json`.
 - [x] **Step 2**: Implement Basic Commands (e.g., `greet`, `log`).
-- [ ] **Step 3**: Investigate `btleplug` or native Bluetooth libraries for Rust.
+- [x] **Step 3**: Investigate `btleplug` or native Bluetooth libraries for Rust.
 
 ### Phase 4: System Integration
 

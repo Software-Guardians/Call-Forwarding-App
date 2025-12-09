@@ -27,7 +27,7 @@ The previous Electron codebase has been deleted. We are starting fresh with a Ru
 5. Port remaining screens (`active_call`, `incoming_call`, `settings`).
 
 - **GIT RULE**: Always use `git push origin master` when pushing changes.
-- **Phase 3 Step 2 Completed**: Implemented `greet` and `log_message` commands in Rust and added test buttons to Dashboard in React. Verified via code check and frontend build.
+- **Phase 3 Step 3 Completed**: Added `btleplug` and `tokio` dependencies. Implemented basic scanning logic in `bluetooth.rs`. Registered `start_scan` command.
 - **CRITICAL**: Pivoted stack from Python to **Electron**.
 - Removed old Python files (`src/`, etc.).
 
