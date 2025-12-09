@@ -27,7 +27,7 @@ The previous Electron codebase has been deleted. We are starting fresh with a Ru
 5. Port remaining screens (`active_call`, `incoming_call`, `settings`).
 
 - **GIT RULE**: Always use `git push origin master` when pushing changes.
-- **Phase 3 Step 1 Completed**: Configured `tauri.conf.json` with correct product details. Verified frontend build. **Note**: Rust environment (`cargo`) not found.
+- **Phase 3 Step 2 Completed**: Implemented `greet` and `log_message` commands in Rust and added test buttons to Dashboard in React. Verified via code check and frontend build.
 - **CRITICAL**: Pivoted stack from Python to **Electron**.
 - Removed old Python files (`src/`, etc.).
 
