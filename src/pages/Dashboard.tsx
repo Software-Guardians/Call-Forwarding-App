@@ -11,8 +11,18 @@ interface DashboardProps {
     onSimulateIncomingCall?: () => void;
 }
 
+import { invoke } from '@tauri-apps/api/core';
+
 export const Dashboard: React.FC<DashboardProps> = ({ onDialpadClick, onContactsClick, onSimulateIncomingCall }) => {
-    // Placeholder actions
+    const handleConnect = async () => {
+        try {
+            console.log('Initiating Bluetooth scan...');
+            await invoke('start_scan');
+            console.log('Scan command sent successfully.');
+        } catch (error) {
+            console.error('Failed to start scan:', error);
+        }
+    };
 
     return (
         <div className="h-full flex items-center justify-center font-display overflow-hidden relative">
@@ -26,6 +36,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ onDialpadClick, onContacts
                         onDialpadClick={onDialpadClick}
                         onContactsClick={onContactsClick}
                         onSimulateCall={onSimulateIncomingCall}
+                        onConnect={handleConnect}
                     />
                     <LiveConsole />
                     <QuickStats />
