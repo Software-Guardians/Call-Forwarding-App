@@ -14,8 +14,8 @@ The previous Electron codebase has been deleted. We are starting fresh with a Ru
 ## Active Status
 
 - [x] Cleanup Electron files
-- [ ] Update Memory Bank
-- [ ] Initialize Tauri Project (`npm create tauri-app`)
+- [x] Update Memory Bank
+- [x] Initialize Tauri Project (`npm create tauri-app`)
 - [ ] Re-implement `Dialer` component using the Template
 
 ## Next Steps
@@ -27,11 +27,11 @@ The previous Electron codebase has been deleted. We are starting fresh with a Ru
 5. Port remaining screens (`active_call`, `incoming_call`, `settings`).
 
 - **GIT RULE**: Always use `git push origin master` when pushing changes.
-- **Phase 1 Step 1 Completed**: Implemented "Aura Theme" in Tailwind (configured colors, fonts, shadows from UI-Template). Fixed PostCSS build.
+- **Phase 3 Step 1 Completed**: Configured `tauri.conf.json` with correct product details. Verified frontend build. **Note**: Rust environment (`cargo`) not found.
 - **CRITICAL**: Pivoted stack from Python to **Electron**.
 - Removed old Python files (`src/`, etc.).
 
-## Next Steps
+## Immediate Actions
 
 - Run `npm init` and install dependencies.
 - Configure Vite for Electron.

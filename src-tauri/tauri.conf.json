@@ -1,8 +1,8 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
-  "productName": "aura_temp",
+  "productName": "CallForwardingApp",
   "version": "0.1.0",
-  "identifier": "com.enis27.aura_temp",
+  "identifier": "com.enis27.callforwarding",
   "build": {
     "beforeDevCommand": "npm run dev",
     "devUrl": "http://localhost:1420",
@@ -12,7 +12,7 @@
   "app": {
     "windows": [
       {
-        "title": "aura_temp",
+        "title": "Call Forwarding App",
         "width": 800,
         "height": 600
       }
