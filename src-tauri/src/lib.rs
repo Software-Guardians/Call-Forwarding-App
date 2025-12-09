@@ -14,17 +14,57 @@ fn log_message(msg: &str) {
 use tauri::menu::{Menu, MenuItem};
 use tauri::tray::{TrayIconBuilder, TrayIconEvent};
 use tauri::Manager;
+use tauri_plugin_global_shortcut::GlobalShortcutExt;
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
         .plugin(tauri_plugin_opener::init())
+        .plugin(
+            tauri_plugin_global_shortcut::Builder::new()
+                .with_handler(move |app, shortcut, event| {
+                    #[cfg(desktop)]
+                    {
+                        use tauri_plugin_global_shortcut::{Code, Modifiers, ShortcutState};
+                        let ctrl_alt_s = tauri_plugin_global_shortcut::Shortcut::new(
+                            Some(Modifiers::CONTROL | Modifiers::ALT),
+                            Code::KeyS,
+                        );
+                        if shortcut == &ctrl_alt_s {
+                            match event.state() {
+                                ShortcutState::Pressed => {
+                                    if let Some(window) = app.get_webview_window("main") {
+                                        if window.is_visible().unwrap_or(false) {
+                                            let _ = window.hide();
+                                        } else {
+                                            let _ = window.show();
+                                            let _ = window.set_focus();
+                                        }
+                                    }
+                                }
+                                _ => {}
+                            }
+                        }
+                    }
+                })
+                .build(),
+        )
         .invoke_handler(tauri::generate_handler![
             greet,
             log_message,
             bluetooth::start_scan
         ])
         .setup(|app| {
+            #[cfg(desktop)]
+            {
+                use tauri_plugin_global_shortcut::{Code, Modifiers};
+                let ctrl_alt_s = tauri_plugin_global_shortcut::Shortcut::new(
+                    Some(Modifiers::CONTROL | Modifiers::ALT),
+                    Code::KeyS,
+                );
+                app.global_shortcut().register(ctrl_alt_s)?;
+            }
+
             let quit_i = MenuItem::with_id(app, "quit", "Quit", true, None::<&str>)?;
             let show_i = MenuItem::with_id(app, "show", "Show", true, None::<&str>)?;
             let menu = Menu::with_items(app, &[&show_i, &quit_i])?;
@@ -57,6 +97,12 @@ pub fn run() {
                 .build(app)?;
 
             Ok(())
+        })
+        .on_window_event(|window, event| {
+            if let tauri::WindowEvent::CloseRequested { api, .. } = event {
+                let _ = window.hide();
+                api.prevent_close();
+            }
         })
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

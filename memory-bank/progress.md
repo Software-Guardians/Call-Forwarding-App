@@ -35,7 +35,7 @@
 ### Phase 4: System Integration
 
 - [x] **Step 1**: System Tray implementation (Rust).
-- [ ] **Step 2**: Global Hotkeys (Rust).
+- [x] **Step 2**: Global Hotkeys (Rust).
 - [ ] **Step 3**: Audio Routing strategy.
 - [ ] **Step 4**: Wire "Connect" button in UI to Main process.
 

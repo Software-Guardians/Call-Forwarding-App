@@ -27,7 +27,7 @@ The previous Electron codebase has been deleted. We are starting fresh with a Ru
 5. Port remaining screens (`active_call`, `incoming_call`, `settings`).
 
 - **GIT RULE**: Always use `git push origin master` when pushing changes.
-- **Phase 4 Step 1 Completed**: Implemented System Tray with "Show" and "Quit" menu items. Enabled `tray-icon` feature in `Cargo.toml`. Verified build.
+- **Phase 4 Step 2 Completed**: Implemented Global Hotkeys. Registered `Ctrl+Alt+S` (or `Command+Alt+S` on Mac) to toggle window visibility. Added `tauri-plugin-global-shortcut` dependency.
 - **CRITICAL**: Pivoted stack from Python to **Electron**.
 - Removed old Python files (`src/`, etc.).
 
