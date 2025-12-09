@@ -34,8 +34,8 @@
 
 ### Phase 4: System Integration
 
-- [x] **Step 1**: System Tray implementation (Rust).
-- [x] **Step 2**: Global Hotkeys (Rust).
+- [x] **Step 1**: Protocol Structs requirements for Rust (Serde).
+- [ ] **Step 2**: Implement Bluetooth Socket Reader/Writer using `protocol.rs`.
 - [x] **Step 3**: Audio Routing strategy (Documented and Setup `cpal`).
 - [x] **Step 4**: Wire "Connect" button in UI to Main process (Invokes `start_scan`).
 

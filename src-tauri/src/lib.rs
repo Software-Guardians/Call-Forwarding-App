@@ -6,6 +6,7 @@ fn greet(name: &str) -> String {
 
 mod audio_manager;
 mod bluetooth;
+mod protocol;
 
 #[tauri::command]
 fn log_message(msg: &str) {

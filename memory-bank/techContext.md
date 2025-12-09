@@ -21,5 +21,5 @@
 
 ## Communication Protocol
 
-- **Native Modules**: Bluetooth libraries in Node.js often require native compilation (`node-gyp`). We must ensure the correct headers are downloaded for the Electron version used.
-- **IPC**: Bluetooth logic runs in the **Main Process** (Node.js), while UI runs in **Renderer Process**. They must communicate via `ipcMain` and `ipcRenderer` (Context Bridge).
+- **Native Modules**: Rust handles all native system interactions (Bluetooth, Audio, File System) directly. No `node-gyp` or native Node modules required.
+- **IPC**: Communication flows between the **Rust Core** and **WebView** via Tauri's `invoke` (Frontend -> Backend) and `emit` (Backend -> Frontend) system.
