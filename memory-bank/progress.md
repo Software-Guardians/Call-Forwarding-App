@@ -34,12 +34,12 @@
 
 ### Phase 4: System Integration
 
-- [ ] **Step 1**: System Tray implementation (Rust).
+- [x] **Step 1**: System Tray implementation (Rust).
 - [ ] **Step 2**: Global Hotkeys (Rust).
 - [ ] **Step 3**: Audio Routing strategy.
 - [ ] **Step 4**: Wire "Connect" button in UI to Main process.
 
-### Phase 4: Protocol Handshake
+### Phase 5: Protocol Handshake
 
 **Problem**: Communication protocol implementation.
 
@@ -47,14 +47,14 @@
 - [ ] **Step 2**: Handle `HEARTBEAT` and `CALL_STATE` messages.
 - [ ] **Step 3**: Emit IPC events (`call-incoming`, `call-ended`) to Renderer based on parsed messages.
 
-### Phase 5: Call Control & Shortcuts
+### Phase 6: Call Control & Shortcuts
 
 **Problem**: Acting on calls.
 
 - [ ] **Step 1**: Implement "Answer/Reject" IPC commands (Renderer -> Main -> Bluetooth).
 - [ ] **Step 2**: Register Global Hotkeys using `globalShortcut` API in Electron.
 
-### Phase 6: Real Data
+### Phase 7: Real Data
 
 **Problem**: Replacing mocks.
 
