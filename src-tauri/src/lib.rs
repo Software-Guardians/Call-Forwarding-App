@@ -4,6 +4,7 @@ fn greet(name: &str) -> String {
     format!("Hello, {}! You've been greeted from Rust!", name)
 }
 
+mod audio_manager;
 mod bluetooth;
 
 #[tauri::command]
@@ -18,6 +19,14 @@ use tauri_plugin_global_shortcut::GlobalShortcutExt;
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
+    // Log audio devices on startup
+    if let Ok(devices) = audio_manager::AudioManager::list_audio_devices() {
+        println!("Available Audio Devices:");
+        for dev in devices {
+            println!("  - {}", dev);
+        }
+    }
+
     tauri::Builder::default()
         .plugin(tauri_plugin_opener::init())
         .plugin(

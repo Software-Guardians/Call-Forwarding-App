@@ -36,7 +36,7 @@
 
 - [x] **Step 1**: System Tray implementation (Rust).
 - [x] **Step 2**: Global Hotkeys (Rust).
-- [ ] **Step 3**: Audio Routing strategy.
+- [x] **Step 3**: Audio Routing strategy (Documented and Setup `cpal`).
 - [ ] **Step 4**: Wire "Connect" button in UI to Main process.
 
 ### Phase 5: Protocol Handshake
