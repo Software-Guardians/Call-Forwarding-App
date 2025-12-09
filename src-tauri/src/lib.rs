@@ -62,7 +62,8 @@ pub fn run() {
         .invoke_handler(tauri::generate_handler![
             greet,
             log_message,
-            bluetooth::start_scan
+            bluetooth::start_scan,
+            bluetooth::send_command
         ])
         .setup(|app| {
             #[cfg(desktop)]

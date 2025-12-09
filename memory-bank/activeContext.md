@@ -27,6 +27,7 @@ The previous Electron codebase has been deleted. We are starting fresh with a Ru
 5. Port remaining screens (`active_call`, `incoming_call`, `settings`).
 
 - **GIT RULE**: Always use `git push origin master` when pushing changes.
+- **Phase 5 Step 2 Completed**: Implemented Protocol IO in `bluetooth.rs`. Added simulated handshake (CALL_STATE) and `send_command` functionality. events emitted to frontend.
 - **Phase 5 Step 1 Completed**: Implemented Serde-based JSON protocol structs in `protocol.rs` and verified with unit tests.
 - **Phase 4 Step 4 Completed**: Wired "CONNECT PHONE" button in Dashboard to `start_scan` command. Added button to `ActionButtons.tsx`.
 - **CRITICAL**: Pivoted stack from Python to **Tauri**.
