@@ -12,6 +12,10 @@ import { invoke } from "@tauri-apps/api/core";
 
 type View = 'dashboard' | 'dialer' | 'contacts' | 'active-call' | 'settings';
 
+import { BluetoothProvider } from "./context/BluetoothContext";
+
+// ... existing imports
+
 function App() {
   const [currentView, setCurrentView] = useState<View>('dashboard');
   const [activeContact, setActiveContact] = useState<string | undefined>(undefined);
@@ -42,16 +46,10 @@ function App() {
   };
 
   return (
-    <>
+    <BluetoothProvider>
       <Layout currentView={currentView} onNavigate={(view) => setCurrentView(view)}>
         {currentView === 'dashboard' && (
           <>
-            {/*
-            // ... inside Dashboard component or pass down as props
-            // For now, I'll modify App.tsx to include these generic tests in the Dashboard view for convenience, 
-            // or I can add them to the Dashboard definition if I had it open. 
-            // Wait, I see App.tsx. I will add a temporary test section in the Dashboard render block in App.tsx.
-            */}
             <Dashboard
               onDialpadClick={() => setCurrentView('dialer')}
               onContactsClick={() => setCurrentView('contacts')}
@@ -100,7 +98,7 @@ function App() {
           onDecline={handleDeclineCall}
         />
       )}
-    </>
+    </BluetoothProvider>
   );
 }
 
