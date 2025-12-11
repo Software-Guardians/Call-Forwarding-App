@@ -51,7 +51,10 @@
   - **Socket**: Implemented `bluer::rfcomm::Stream` connection (Channel 1 default).
   - **I/O**: Added threaded Read Loop for continuous JSON parsing and `BluetoothAppState` for thread-safe writing.
   - **Protocol**: Connected `ProtocolMessage` structs to real socket stream.
-- [ ] **Step 4**: Implement Call Logic based on JSON Protocol (Incoming/Active/Ended).
+- [x] **Step 4**: Implement Call Logic based on JSON Protocol (Incoming/Active/Ended).
+  - **Context**: Updated `BluetoothContext` to manage `CallState` (IDLE/RINGING/ACTIVE) and `CallInfo` globally.
+  - **Refactor**: Converted `App.tsx` to drive navigation and overlay visibility purely from Bluetooth events.
+  - **Commands**: Implemented `answerCall`, `rejectCall`, `endCall`, `startCall` sending JSON commands to backend.
 
 ### Phase 6: Protocol Handshake
 

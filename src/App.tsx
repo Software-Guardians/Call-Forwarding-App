@@ -1,4 +1,5 @@
-import { useState } from "react";
+
+import { useState, useEffect } from "react";
 import "./App.css";
 import { Dashboard } from "./pages/Dashboard";
 import { Dialer } from "./pages/Dialer";
@@ -12,61 +13,58 @@ import { invoke } from "@tauri-apps/api/core";
 
 type View = 'dashboard' | 'dialer' | 'contacts' | 'active-call' | 'settings';
 
-import { BluetoothProvider } from "./context/BluetoothContext";
+import { BluetoothProvider, useBluetooth } from "./context/BluetoothContext";
 
-// ... existing imports
+// Inner App Content (Can use Context)
+function AppContent() {
+  const {
+    callState,
+    callInfo,
+    answerCall,
+    rejectCall,
+    endCall,
+    startCall
+  } = useBluetooth();
 
-function App() {
   const [currentView, setCurrentView] = useState<View>('dashboard');
-  const [activeContact, setActiveContact] = useState<string | undefined>(undefined);
-  const [incomingCall, setIncomingCall] = useState<{ name: string, number: string } | null>(null);
 
-  const startCall = (name: string) => {
-    setActiveContact(name);
-    setCurrentView('active-call');
-  };
-
-  const simulateIncomingCall = () => {
-    setIncomingCall({
-      name: "Unknown Caller",
-      number: "+1 (555) 999-0000"
-    });
-  };
-
-  const handleAcceptCall = () => {
-    if (incomingCall) {
-      setActiveContact(incomingCall.name);
+  // React to Call State Changes
+  useEffect(() => {
+    if (callState === 'ACTIVE' || callState === 'DIALING') {
       setCurrentView('active-call');
-      setIncomingCall(null);
     }
-  };
+    // Optionally disconnect -> go back to dashboard/contacts?
+    // We can handle this in onEndCall too or listen to IDLE.
+    if (callState === 'IDLE' && currentView === 'active-call') {
+      // Ideally go back to where we were, or dashboard.
+      setCurrentView('dashboard');
+    }
+  }, [callState]);
 
-  const handleDeclineCall = () => {
-    setIncomingCall(null);
+  const handleStartCall = (numberOrName: string) => {
+    // For now assume number, or look it up.
+    // If it's a name from contacts, we need the number.
+    // Assuming 'numberOrName' is what we dial for now.
+    startCall(numberOrName);
   };
 
   return (
-    <BluetoothProvider>
+    <>
       <Layout currentView={currentView} onNavigate={(view) => setCurrentView(view)}>
         {currentView === 'dashboard' && (
           <>
             <Dashboard
               onDialpadClick={() => setCurrentView('dialer')}
               onContactsClick={() => setCurrentView('contacts')}
-              onSimulateIncomingCall={simulateIncomingCall}
+              onSimulateIncomingCall={() => { }} // Disabled simulation
             />
+            {/* Debug Buttons */}
             <div className="fixed bottom-4 right-4 flex gap-2">
               <button
                 onClick={() => invoke('greet', { name: 'User' }).then(console.log)}
                 className="px-3 py-1 bg-slate-700 text-white rounded text-xs"
               >
                 Test Greet
-              </button>
-              <button
-                onClick={() => invoke('log_message', { msg: 'Hello from React!' })}
-                className="px-3 py-1 bg-slate-700 text-white rounded text-xs"
-              >
-                Test Log
               </button>
             </div>
           </>
@@ -76,13 +74,13 @@ function App() {
         )}
         {currentView === 'contacts' && (
           <Contacts
-            onCallStart={startCall}
+            onCallStart={handleStartCall}
           />
         )}
         {currentView === 'active-call' && (
           <ActiveCall
-            contactName={activeContact}
-            onEndCall={() => setCurrentView('contacts')}
+            contactName={callInfo?.name || callInfo?.number || "Unknown"}
+            onEndCall={endCall}
           />
         )}
         {currentView === 'settings' && (
@@ -90,14 +88,23 @@ function App() {
         )}
       </Layout>
 
-      {incomingCall && (
+      {/* Overlay independent of view */}
+      {callState === 'RINGING' && (
         <IncomingCallOverlay
-          callerName={incomingCall.name}
-          callerNumber={incomingCall.number}
-          onAccept={handleAcceptCall}
-          onDecline={handleDeclineCall}
+          callerName={callInfo?.name || "Unknown Caller"}
+          callerNumber={callInfo?.number || "Unknown Number"}
+          onAccept={answerCall}
+          onDecline={rejectCall}
         />
       )}
+    </>
+  );
+}
+
+function App() {
+  return (
+    <BluetoothProvider>
+      <AppContent />
     </BluetoothProvider>
   );
 }
