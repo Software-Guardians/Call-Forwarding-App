@@ -66,6 +66,15 @@ export const useBluetooth = () => {
         setAvailableDevices([]);
     }, []);
 
+    const cancelScan = useCallback(() => {
+        if (connectedDevice) {
+            setConnectionState('CONNECTED');
+        } else {
+            setConnectionState('IDLE');
+        }
+        // Optionally invoke 'stop_scan' backend if it existed, but for now just UI state revert.
+    }, [connectedDevice]);
+
     return {
         connectionState,
         availableDevices,
@@ -73,6 +82,7 @@ export const useBluetooth = () => {
         error,
         startScan,
         connectToDevice,
-        resetState
+        resetState,
+        cancelScan
     };
 };

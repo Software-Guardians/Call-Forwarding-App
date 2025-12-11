@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { BluetoothDevice, ConnectionState } from '../../types/bluetooth';
 import { Smartphone, Laptop, Monitor, Bluetooth, X, Loader2, Wifi } from 'lucide-react';
 
@@ -9,6 +9,7 @@ interface ScanDeviceModalProps {
     availableDevices: BluetoothDevice[];
     startScan: () => void;
     connectToDevice: (device: BluetoothDevice) => void;
+    cancelScan: () => void;
     error: string | null;
 }
 
@@ -28,26 +29,39 @@ const ScanDeviceModal: React.FC<ScanDeviceModalProps> = ({
     availableDevices,
     startScan,
     connectToDevice,
+    cancelScan,
     error
 }) => {
-    // Auto-start scan when modal opens
+    const prevConnectionState = useRef<ConnectionState>(connectionState);
+
+    // Track previous state to handle transitions
     useEffect(() => {
-        if (isOpen && connectionState === 'IDLE') {
+        prevConnectionState.current = connectionState;
+    }, [connectionState]);
+
+    // Auto-start scan when modal opens
+    // We allow scanning even if already connected (to find new devices)
+    useEffect(() => {
+        if (isOpen && connectionState !== 'SCANNING' && connectionState !== 'CONNECTING') {
             startScan();
         }
-    }, [isOpen, connectionState, startScan]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [isOpen]);
 
-    // Auto-close on successful connection
+    // Auto-close on successful connection (transition from CONNECTING -> CONNECTED)
     useEffect(() => {
-        if (isOpen && connectionState === 'CONNECTED') {
+        if (isOpen && connectionState === 'CONNECTED' && prevConnectionState.current === 'CONNECTING') {
             const timer = setTimeout(() => {
                 onClose();
-            }, 500); // Small delay to show "Connected" state potentially? 
-            // Actually, immediate close is often snappier, but let's give 1.5s visual feedback if we had a success state in modal.
-            // Since our valid state is just CONNECTED, let's close it so the Header can show the status.
+            }, 500);
             return () => clearTimeout(timer);
         }
     }, [isOpen, connectionState, onClose]);
+
+    const handleClose = () => {
+        cancelScan(); // Revert state if we didn't connect
+        onClose();
+    };
 
     if (!isOpen) return null;
 
@@ -62,7 +76,7 @@ const ScanDeviceModal: React.FC<ScanDeviceModalProps> = ({
                         Connect Device
                     </h3>
                     <button
-                        onClick={onClose}
+                        onClick={handleClose}
                         className="p-1.5 hover:bg-white/10 rounded-full transition-colors text-slate-400 hover:text-white"
                     >
                         <X className="w-5 h-5" />

@@ -44,6 +44,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ onDialpadClick, onContacts
                     availableDevices={bluetooth.availableDevices}
                     startScan={bluetooth.startScan}
                     connectToDevice={bluetooth.connectToDevice}
+                    cancelScan={bluetooth.cancelScan}
                     error={bluetooth.error}
                 />
 
