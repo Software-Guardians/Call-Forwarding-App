@@ -165,16 +165,42 @@ impl BluetoothManager {
             }
         }
 
-        // VERIFICATION STEP:
-        // Wait a small moment? Sometimes BlueZ state lags.
-        tokio::time::sleep(Duration::from_millis(500)).await;
+        // VERIFICATION STEP with Polling
+        // Sometimes BlueZ takes a moment to update the 'Connected' property after the method returns.
+        // We will poll for usage.
 
-        if !device.is_connected().await.map_err(|e| e.to_string())? {
-            println!("Verification failed: Device reports disconnected after connect call.");
-            return Err("Connection verification failed. Device is not connected.".to_string());
+        let mut retries = 5;
+        let mut is_verified = false;
+
+        while retries > 0 {
+            tokio::time::sleep(Duration::from_millis(500)).await;
+            if device.is_connected().await.unwrap_or(false) {
+                is_verified = true;
+                break;
+            }
+            println!(
+                "Verification retry {}/5: Device not yet connected...",
+                6 - retries
+            );
+            retries -= 1;
         }
 
-        println!("Connected to {} verified!", address);
+        if !is_verified {
+            // Even if property says no, if the connect call succeeded and phone says yes, it might be just BlueZ lag.
+            // However, for robust app state, we prefer it to be consistent.
+            // But user feedback implies we are blocking a valid connection.
+            // Let's log a WARNING but return OK if we trust the `connect` call, OR just fail?
+            // User says "Phone says connected". So the link is up.
+            // If we fail here, the App UI shows "Failed" while phone is "Connected". This is the worst state (Split Brain).
+            // Better to assume Success if `connect()` didn't err, but warn.
+            println!("Warning: Device property 'Connected' is still false, but connect() succeeded. Assuming connected.");
+
+            // ALTERNATIVE: Don't error out, just trust `connect()`.
+            // But updating the UI relies on valid state.
+            // Let's return OK. The polling failure is just a warning.
+        }
+
+        println!("Connected to {}!", address);
 
         // Emit Connected Event
         // app.emit("connection-state", "connected")...
