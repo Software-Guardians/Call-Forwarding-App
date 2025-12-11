@@ -13,6 +13,8 @@ pub enum ProtocolMessage {
     ContactsData(ContactsDataPayload),
     #[serde(rename = "HEARTBEAT")]
     Heartbeat(HeartbeatPayload),
+    #[serde(rename = "HANDSHAKE")]
+    Handshake(HandshakePayload),
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
@@ -48,6 +50,11 @@ pub struct Contact {
 
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub struct HeartbeatPayload {}
+
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+pub struct HandshakePayload {
+    pub version: String,
+}
 
 #[cfg(test)]
 mod tests {

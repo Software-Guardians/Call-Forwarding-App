@@ -60,7 +60,11 @@
 
 **Problem**: Communication protocol implementation.
 
-- [ ] **Step 1**: Implement JSON Parser in Main process (Incoming stream -> Objects).
+- [x] **Step 1**: Implement JSON Parser in Main process (Incoming stream -> Objects).
+  - **Status**: Completed.
+  - **Handshake**: Implemented `Handshake` message (Version "1.0") sent immediately upon connection.
+  - **Heartbeat**: Added listener for `Heartbeat` messages to verify connection vitality.
+  - **Protocol**: Updated `protocol.rs` with necessary structs.
 - [ ] **Step 2**: Handle `HEARTBEAT` and `CALL_STATE` messages.
 - [ ] **Step 3**: Emit IPC events (`call-incoming`, `call-ended`) to Renderer based on parsed messages.
 

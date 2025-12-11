@@ -3,7 +3,7 @@ use bluer::Session;
 use serde::{Deserialize, Serialize};
 use std::str::FromStr;
 use std::time::Duration;
-use tauri::{AppHandle, Emitter, Manager, State}; // Added State, Manager
+use tauri::{AppHandle, Emitter, Manager}; // Added Manager
 use tokio::io::{AsyncBufReadExt, AsyncWriteExt, BufReader}; // Added IO traits
 use tokio::sync::Mutex;
 use uuid::Uuid; // Added Mutex
@@ -192,9 +192,25 @@ impl BluetoothManager {
         // Split Stream
         let (reader, writer) = tokio::io::split(stream);
 
-        // Store Writer in State
-        let state = app.state::<BluetoothAppState>();
-        *state.output_stream.lock().await = Some(writer);
+        // Send Handshake
+        {
+            use crate::protocol::{HandshakePayload, ProtocolMessage};
+            let handshake_msg = ProtocolMessage::Handshake(HandshakePayload {
+                version: "1.0".to_string(),
+            });
+            let json = serde_json::to_string(&handshake_msg).map_err(|e| e.to_string())?;
+            let line = json + "\n";
+            let mut w = writer; // Move writer temporarily to write
+            w.write_all(line.as_bytes())
+                .await
+                .map_err(|e| e.to_string())?;
+            w.flush().await.map_err(|e| e.to_string())?;
+            println!("Sent Handshake");
+
+            // Store Writer in State (recover writer)
+            let state = app.state::<BluetoothAppState>();
+            *state.output_stream.lock().await = Some(w);
+        }
 
         // Spawn Reader Loop
         let app_handle = app.clone();
@@ -230,6 +246,8 @@ impl BluetoothManager {
                                                 let _ =
                                                     app_handle.emit("call-state-update", payload);
                                             }
+                                        } else if msg_type == "HEARTBEAT" {
+                                            println!("Heartbeat received");
                                         }
                                     }
                                     // Debug emit
