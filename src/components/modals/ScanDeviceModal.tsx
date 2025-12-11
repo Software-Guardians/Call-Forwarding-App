@@ -34,11 +34,6 @@ const ScanDeviceModal: React.FC<ScanDeviceModalProps> = ({
 }) => {
     const prevConnectionState = useRef<ConnectionState>(connectionState);
 
-    // Track previous state to handle transitions
-    useEffect(() => {
-        prevConnectionState.current = connectionState;
-    }, [connectionState]);
-
     // Auto-start scan when modal opens
     // We allow scanning even if already connected (to find new devices)
     useEffect(() => {
@@ -51,12 +46,18 @@ const ScanDeviceModal: React.FC<ScanDeviceModalProps> = ({
     // Auto-close on successful connection (transition from CONNECTING -> CONNECTED)
     useEffect(() => {
         if (isOpen && connectionState === 'CONNECTED' && prevConnectionState.current === 'CONNECTING') {
+            console.log("Auto-closing modal on connection success");
             const timer = setTimeout(() => {
                 onClose();
             }, 500);
             return () => clearTimeout(timer);
         }
     }, [isOpen, connectionState, onClose]);
+
+    // Track previous state to handle transitions (Must run LAST to ensure prev value is stale during other effects)
+    useEffect(() => {
+        prevConnectionState.current = connectionState;
+    }, [connectionState]);
 
     const handleClose = () => {
         cancelScan(); // Revert state if we didn't connect
