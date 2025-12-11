@@ -282,6 +282,11 @@ impl BluetoothManager {
                                             }
                                         } else if msg_type == "HEARTBEAT" {
                                             println!("Heartbeat received");
+                                        } else if msg_type == "CONTACTS_DATA" {
+                                            if let Some(payload) = json_val.get("payload") {
+                                                println!("Contacts Data received");
+                                                let _ = app_handle.emit("contacts-update", payload);
+                                            }
                                         }
                                     }
                                     // Debug emit

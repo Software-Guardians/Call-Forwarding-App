@@ -69,7 +69,10 @@
   - **Status**: Completed.
   - **Watchdog**: Implemented a connection health monitor. Checks every 5 seconds; disconnects if idle for >15 seconds.
   - **State**: `last_activity` timestamp added to global state, reset on every message receipt.
-- [ ] **Step 3**: Emit IPC events (`call-incoming`, `call-ended`) to Renderer based on parsed messages.
+- [x] **Step 3**: Emit IPC events (`call-incoming`, `call-ended`) to Renderer based on parsed messages.
+  - **Status**: Completed.
+  - **Contacts**: Added `contacts-update` event logic for `CONTACTS_DATA` protocol messages.
+  - **Events**: `call-state-update` (handled in previous steps) and `contacts-update` ensure full protocol event coverage.
 
 ### Phase 7: Call Control & Shortcuts
 
