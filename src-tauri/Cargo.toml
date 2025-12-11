@@ -22,8 +22,12 @@ tauri = { version = "2", features = ["tray-icon"] }
 tauri-plugin-opener = "2"
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
-btleplug = "0.11"
+bluer = { version = "0.17", features = ["full"] }
+tokio-util = { version = "0.7", features = ["codec"] }
+bytes = "1"
 tokio = { version = "1", features = ["full"] }
 tauri-plugin-global-shortcut = "2.3.1"
 cpal = "0.16.0"
+futures = "0.3"
+uuid = { version = "1", features = ["v4", "fast-rng", "macro-diagnostics"] }
 

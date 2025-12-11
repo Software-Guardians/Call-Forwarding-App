@@ -1,10 +1,5 @@
 # Progress & Roadmap
 
-## Status Overview
-
-- **Project Status**: Initialization (Restart)
-- **Current Phase**: **Phase 0: Architecture & Setup**
-- **Completion**: 0%
 - **Work Log Rule**: Every action taken must be recorded in the `Specific Progress Log` section below with high detail.
 
 ## Roadmap: Problem-Centric Phases
@@ -42,10 +37,9 @@
 
 ### Phase 5: Core Logic Implementation (Real Device Integration)
 
-- [ ] **Step 1**: Implement real Bluetooth Socket connection (RFCOMM).
+- [x] **Step 1**: Implement real Bluetooth Socket connection (RFCOMM).
 - [ ] **Step 2**: Replace simulated data with real socket data.
-- [ ] **Step 3**: Implement Audio Stream bridging (if needed).ed and Setup `cpal`).
-- [x] **Step 4**: Wire "Connect" button in UI to Main process (Invokes `start_scan`).
+- [ ] **Step 3**: Implement Call Logic based on JSON Protocol (Incoming/Active/Ended).
 
 ### Phase 6: Protocol Handshake
 
@@ -60,11 +54,11 @@
 **Problem**: Acting on calls.
 
 - [ ] **Step 1**: Implement "Answer/Reject" IPC commands (Renderer -> Main -> Bluetooth).
-- [ ] **Step 2**: Register Global Hotkeys using `globalShortcut` API in Electron.
+- [ ] **Step 2**: Register Global Hotkeys using Tauri `global-shortcut` plugin.
 
 ### Phase 8: Real Data
 
 **Problem**: Replacing mocks.
 
 - [x] **Step 1**: Implement `GET_CONTACTS` flow.
-- [ ] **Step 2**: Store contacts using `electron-store`.
+- [ ] **Step 2**: Store contacts using Tauri `plugin-store` (or compatible file store).
