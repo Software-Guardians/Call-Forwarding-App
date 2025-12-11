@@ -44,6 +44,7 @@
   - Filter devices to allow connection **ONLY to Android Phones** (based on CoD or UUID).
   - Robust **Connection State Management** (Connecting, Connected, Disconnected, Failed) with UI feedback.
   - **Refinement**: Added manual connection verification to prevent false positives and connected Header UI to real state.
+  - **Correction**: Removed unsafe fallback to ensure only truly connected devices are reported as such.
 - [ ] **Step 3**: Replace simulated data with real socket data.
 - [ ] **Step 4**: Implement Call Logic based on JSON Protocol (Incoming/Active/Ended).
 

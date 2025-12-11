@@ -186,21 +186,11 @@ impl BluetoothManager {
         }
 
         if !is_verified {
-            // Even if property says no, if the connect call succeeded and phone says yes, it might be just BlueZ lag.
-            // However, for robust app state, we prefer it to be consistent.
-            // But user feedback implies we are blocking a valid connection.
-            // Let's log a WARNING but return OK if we trust the `connect` call, OR just fail?
-            // User says "Phone says connected". So the link is up.
-            // If we fail here, the App UI shows "Failed" while phone is "Connected". This is the worst state (Split Brain).
-            // Better to assume Success if `connect()` didn't err, but warn.
-            println!("Warning: Device property 'Connected' is still false, but connect() succeeded. Assuming connected.");
-
-            // ALTERNATIVE: Don't error out, just trust `connect()`.
-            // But updating the UI relies on valid state.
-            // Let's return OK. The polling failure is just a warning.
+            println!("Verification failed: Device 'Connected' property is false after retries.");
+            return Err("Failed to verify connection. Please minimize the app and check system Bluetooth settings, or try again.".to_string());
         }
 
-        println!("Connected to {}!", address);
+        println!("Connected to {} verified!", address);
 
         // Emit Connected Event
         // app.emit("connection-state", "connected")...
