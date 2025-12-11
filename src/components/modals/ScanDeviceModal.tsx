@@ -37,6 +37,18 @@ const ScanDeviceModal: React.FC<ScanDeviceModalProps> = ({
         }
     }, [isOpen, connectionState, startScan]);
 
+    // Auto-close on successful connection
+    useEffect(() => {
+        if (isOpen && connectionState === 'CONNECTED') {
+            const timer = setTimeout(() => {
+                onClose();
+            }, 500); // Small delay to show "Connected" state potentially? 
+            // Actually, immediate close is often snappier, but let's give 1.5s visual feedback if we had a success state in modal.
+            // Since our valid state is just CONNECTED, let's close it so the Header can show the status.
+            return () => clearTimeout(timer);
+        }
+    }, [isOpen, connectionState, onClose]);
+
     if (!isOpen) return null;
 
     return (

@@ -47,7 +47,10 @@ export const Dashboard: React.FC<DashboardProps> = ({ onDialpadClick, onContacts
                     error={bluetooth.error}
                 />
 
-                <DashboardHeader />
+                <DashboardHeader
+                    connectionState={bluetooth.connectionState}
+                    deviceName={bluetooth.connectedDevice?.name}
+                />
 
                 {/* Body Content */}
                 <div className="flex-1 flex flex-col p-6 gap-6 overflow-y-auto">

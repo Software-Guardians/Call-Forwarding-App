@@ -156,12 +156,25 @@ impl BluetoothManager {
             bluer::Address::from_str(&address).map_err(|e| format!("Invalid address: {}", e))?;
         let device = adapter.device(addr).map_err(|e| e.to_string())?;
 
+        // Try to connect
         if !device.is_connected().await.map_err(|e| e.to_string())? {
             println!("Connecting to device...");
-            device.connect().await.map_err(|e| e.to_string())?;
+            if let Err(e) = device.connect().await {
+                println!("Connection call failed: {}", e);
+                return Err(format!("Connection failed: {}", e));
+            }
         }
 
-        println!("Connected to {}!", address);
+        // VERIFICATION STEP:
+        // Wait a small moment? Sometimes BlueZ state lags.
+        tokio::time::sleep(Duration::from_millis(500)).await;
+
+        if !device.is_connected().await.map_err(|e| e.to_string())? {
+            println!("Verification failed: Device reports disconnected after connect call.");
+            return Err("Connection verification failed. Device is not connected.".to_string());
+        }
+
+        println!("Connected to {} verified!", address);
 
         // Emit Connected Event
         // app.emit("connection-state", "connected")...

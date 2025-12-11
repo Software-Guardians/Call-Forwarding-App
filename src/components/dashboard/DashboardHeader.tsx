@@ -1,6 +1,17 @@
 import React from 'react';
+import { ConnectionState } from '../../types/bluetooth';
 
-export const DashboardHeader: React.FC = () => {
+interface DashboardHeaderProps {
+    connectionState?: ConnectionState;
+    deviceName?: string;
+}
+
+export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
+    connectionState = 'IDLE',
+    deviceName
+}) => {
+    const isConnected = connectionState === 'CONNECTED';
+
     return (
         <header className="flex items-center justify-between px-5 py-4 border-b border-primary/20 bg-black/20 select-none" style={{ WebkitAppRegion: 'drag' } as React.CSSProperties}>
             <div className="flex items-center gap-3">
@@ -13,14 +24,17 @@ export const DashboardHeader: React.FC = () => {
                 </div>
             </div>
             {/* Connection Status Pill */}
-            <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-[#050A14]/80 border border-white/5 shadow-inner">
-                <div className="relative flex h-2 w-2">
-                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-                    <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+            {isConnected && (
+                <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-[#050A14]/80 border border-white/5 shadow-inner">
+                    <div className="relative flex h-2 w-2">
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                        <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+                    </div>
+                    <span className="text-xs font-medium text-gray-300">{deviceName || 'Unknown Device'}</span>
+                    <span className="text-[10px] text-gray-500 font-mono pl-1 border-l border-gray-700">--%</span>
                 </div>
-                <span className="text-xs font-medium text-gray-300">Pixel 7</span>
-                <span className="text-[10px] text-gray-500 font-mono pl-1 border-l border-gray-700">84%</span>
-            </div>
+            )}
         </header>
     );
 };
+
