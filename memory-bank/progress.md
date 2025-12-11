@@ -65,7 +65,10 @@
   - **Handshake**: Implemented `Handshake` message (Version "1.0") sent immediately upon connection.
   - **Heartbeat**: Added listener for `Heartbeat` messages to verify connection vitality.
   - **Protocol**: Updated `protocol.rs` with necessary structs.
-- [ ] **Step 2**: Handle `HEARTBEAT` and `CALL_STATE` messages.
+- [x] **Step 2**: Handle `HEARTBEAT` and `CALL_STATE` messages.
+  - **Status**: Completed.
+  - **Watchdog**: Implemented a connection health monitor. Checks every 5 seconds; disconnects if idle for >15 seconds.
+  - **State**: `last_activity` timestamp added to global state, reset on every message receipt.
 - [ ] **Step 3**: Emit IPC events (`call-incoming`, `call-ended`) to Renderer based on parsed messages.
 
 ### Phase 7: Call Control & Shortcuts

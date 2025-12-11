@@ -2,7 +2,7 @@
 use bluer::Session;
 use serde::{Deserialize, Serialize};
 use std::str::FromStr;
-use std::time::Duration;
+use std::time::{Duration, Instant};
 use tauri::{AppHandle, Emitter, Manager}; // Added Manager
 use tokio::io::{AsyncBufReadExt, AsyncWriteExt, BufReader}; // Added IO traits
 use tokio::sync::Mutex;
@@ -15,12 +15,14 @@ const SERVICE_UUID: &str = "00001101-0000-1000-8000-00805F9B34FB";
 pub struct BluetoothAppState {
     // We store the WriteHalf of the stream to send commands
     pub output_stream: Mutex<Option<tokio::io::WriteHalf<bluer::rfcomm::Stream>>>,
+    pub last_activity: Mutex<Instant>,
 }
 
 impl Default for BluetoothAppState {
     fn default() -> Self {
         Self {
             output_stream: Mutex::new(None),
+            last_activity: Mutex::new(Instant::now()),
         }
     }
 }
@@ -192,6 +194,10 @@ impl BluetoothManager {
         // Split Stream
         let (reader, writer) = tokio::io::split(stream);
 
+        // Reset Activity Timer
+        let state = app.state::<BluetoothAppState>();
+        *state.last_activity.lock().await = Instant::now();
+
         // Send Handshake
         {
             use crate::protocol::{HandshakePayload, ProtocolMessage};
@@ -208,9 +214,33 @@ impl BluetoothManager {
             println!("Sent Handshake");
 
             // Store Writer in State (recover writer)
-            let state = app.state::<BluetoothAppState>();
             *state.output_stream.lock().await = Some(w);
         }
+
+        // Spawn Watchdog Loop
+        let watchdog_app = app.clone();
+        tauri::async_runtime::spawn(async move {
+            println!("Watchdog started.");
+            loop {
+                tokio::time::sleep(Duration::from_secs(5)).await;
+
+                let state = watchdog_app.state::<BluetoothAppState>();
+                let has_connection = state.output_stream.lock().await.is_some();
+
+                if !has_connection {
+                    println!("Watchdog: Connection closed cleanly. Stopping watchdog.");
+                    break;
+                }
+
+                let last_active = *state.last_activity.lock().await; // Copy Instant
+                if last_active.elapsed() > Duration::from_secs(15) {
+                    println!("Watchdog: Connection Timed Out (>15s idle). Disconnecting...");
+                    *state.output_stream.lock().await = None; // Drop writer -> disconnect
+                    let _ = watchdog_app.emit("connection-state", "disconnected");
+                    break;
+                }
+            }
+        });
 
         // Spawn Reader Loop
         let app_handle = app.clone();
@@ -234,6 +264,10 @@ impl BluetoothManager {
                     Ok(_) => {
                         let trimmed = line.trim();
                         if !trimmed.is_empty() {
+                            // Update Activity
+                            let state = app_handle.state::<BluetoothAppState>();
+                            *state.last_activity.lock().await = Instant::now();
+
                             println!("Received: {}", trimmed);
                             // Valid JSON check
                             match serde_json::from_str::<serde_json::Value>(trimmed) {
