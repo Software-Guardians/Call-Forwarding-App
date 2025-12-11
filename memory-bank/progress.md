@@ -38,16 +38,16 @@
 - [x] **Step 2**: Implement Bluetooth Socket Reader/Writer using `protocol.rs` (Simulated Handshake).
 - [x] **Step 3**: Connect Frontend to `call-state-update` event (React Hook + IncomingCallOverlay).
 - [x] **Step 4**: Verify End-to-End Simulation (Connect -> Ringing -> UI Overlay).
-- [x] **Phase 5 Complete**: Protocol Handshake (Simulated) is fully operational.
+- [x] **Phase 4 Complete**: Protocol Handshake (Simulated) is fully operational.
 
-### Phase 6: Core Logic Implementation (Real Device Integration)
+### Phase 5: Core Logic Implementation (Real Device Integration)
 
 - [ ] **Step 1**: Implement real Bluetooth Socket connection (RFCOMM).
 - [ ] **Step 2**: Replace simulated data with real socket data.
 - [ ] **Step 3**: Implement Audio Stream bridging (if needed).ed and Setup `cpal`).
 - [x] **Step 4**: Wire "Connect" button in UI to Main process (Invokes `start_scan`).
 
-### Phase 5: Protocol Handshake
+### Phase 6: Protocol Handshake
 
 **Problem**: Communication protocol implementation.
 
@@ -55,22 +55,16 @@
 - [ ] **Step 2**: Handle `HEARTBEAT` and `CALL_STATE` messages.
 - [ ] **Step 3**: Emit IPC events (`call-incoming`, `call-ended`) to Renderer based on parsed messages.
 
-### Phase 6: Call Control & Shortcuts
+### Phase 7: Call Control & Shortcuts
 
 **Problem**: Acting on calls.
 
 - [ ] **Step 1**: Implement "Answer/Reject" IPC commands (Renderer -> Main -> Bluetooth).
 - [ ] **Step 2**: Register Global Hotkeys using `globalShortcut` API in Electron.
 
-### Phase 7: Real Data
+### Phase 8: Real Data
 
 **Problem**: Replacing mocks.
 
 - [x] **Step 1**: Implement `GET_CONTACTS` flow.
 - [ ] **Step 2**: Store contacts using `electron-store`.
-
-## Specific Progress Log
-
-- [DATE] **Python Cleanup**: Removed python source files to migrate to Electron.
-- [2025-12-07] **Phase 0 Completed**: Initialized Electron+React+Vite project. Created Main/Renderer process structure. Configured TailwindCSS with Aura Theme colors. Verified build success.
-- [2025-12-07] **Phase 1 Step 1 Completed**: Implemented "Aura Theme" configuration in Tailwind (Colors, Fonts, Shadows) and basic CSS utilities (`glass-panel`, `text-glow`) extracted from UI-Template.
