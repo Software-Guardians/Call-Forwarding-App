@@ -47,7 +47,10 @@
   - **Correction**: Removed unsafe fallback to ensure only truly connected devices are reported as such.
   - **Enhancement**: Enabled "Connect" button while connected to allow switching devices; Modal now correctly handles re-scanning without closing.
   - **Refactor**: Implemented `BluetoothContext` for global state management, synchronizing `GlobalHeader` and `Dashboard` connection status.
-- [ ] **Step 3**: Replace simulated data with real socket data.
+- [x] **Step 3**: Replace simulated data with real socket data.
+  - **Socket**: Implemented `bluer::rfcomm::Stream` connection (Channel 1 default).
+  - **I/O**: Added threaded Read Loop for continuous JSON parsing and `BluetoothAppState` for thread-safe writing.
+  - **Protocol**: Connected `ProtocolMessage` structs to real socket stream.
 - [ ] **Step 4**: Implement Call Logic based on JSON Protocol (Incoming/Active/Ended).
 
 ### Phase 6: Protocol Handshake

@@ -3,12 +3,27 @@ use bluer::Session;
 use serde::{Deserialize, Serialize};
 use std::str::FromStr;
 use std::time::Duration;
-use tauri::{AppHandle, Emitter};
-use uuid::Uuid;
+use tauri::{AppHandle, Emitter, Manager, State}; // Added State, Manager
+use tokio::io::{AsyncBufReadExt, AsyncWriteExt, BufReader}; // Added IO traits
+use tokio::sync::Mutex;
+use uuid::Uuid; // Added Mutex
 
 // Standard SPP UUID, or replace with specific Android App UUID if different.
 // Ideally usage: 00001101-0000-1000-8000-00805F9B34FB
 const SERVICE_UUID: &str = "00001101-0000-1000-8000-00805F9B34FB";
+
+pub struct BluetoothAppState {
+    // We store the WriteHalf of the stream to send commands
+    pub output_stream: Mutex<Option<tokio::io::WriteHalf<bluer::rfcomm::Stream>>>,
+}
+
+impl Default for BluetoothAppState {
+    fn default() -> Self {
+        Self {
+            output_stream: Mutex::new(None),
+        }
+    }
+}
 
 #[derive(Serialize, Deserialize, Clone, Debug)]
 pub struct BluetoothDevice {
@@ -139,69 +154,140 @@ impl BluetoothManager {
         Ok(())
     }
 
-    pub async fn connect(_app: &AppHandle, address: String) -> Result<(), String> {
+    pub async fn connect(app: &AppHandle, address: String) -> Result<(), String> {
         println!("Connect requested for address: {}", address);
-        // Here we would implement the specific connection logic using the address
-        // For Phase 5 Step 2, we just emit a status update to satisfy the "simulate connection" UI flow
-        // or actually try to connect if we have the object.
-        // Since we are inside a static method, we need a fresh adapter/device handle or store it globally.
-        // For now, let's just re-acquire the device by address.
+
+        // We don't necessarily need a Session/Adapter for just Stream::connect if we have the address,
+        // but it's good practice to initializing bluer first or ensure bluetooth is on.
+        // However, Stream::connect is standalone.
+        // Let's keep the session check to ensure adapter is powered?
+        // Or just go straight to connection for speed.
+        // Let's use session to get the adapter and check if powered.
 
         let session = Session::new().await.map_err(|e| e.to_string())?;
         let adapter = session.default_adapter().await.map_err(|e| e.to_string())?;
-        // Address parsing might be needed depending on bluer version, usually Address is MacAddress(u8,u8,...)
-        // bluer::Address::from_str(&address)
+
+        if !adapter.is_powered().await.map_err(|e| e.to_string())? {
+            return Err("Bluetooth adapter is not powered".to_string());
+        }
 
         let addr =
             bluer::Address::from_str(&address).map_err(|e| format!("Invalid address: {}", e))?;
-        let device = adapter.device(addr).map_err(|e| e.to_string())?;
 
-        // Try to connect
-        if !device.is_connected().await.map_err(|e| e.to_string())? {
-            println!("Connecting to device...");
-            if let Err(e) = device.connect().await {
-                println!("Connection call failed: {}", e);
-                return Err(format!("Connection failed: {}", e));
+        // Attempt to connect to RFCOMM Channel 1 (Standard SPP)
+        // If the Android app listens on a different channel (via UUID), we might need to find it.
+        // Using Channel 1 is a safe bet for a primary SPP service.
+        println!("Connecting to RFCOMM channel 1 on {}...", addr);
+
+        let target = bluer::rfcomm::SocketAddr::new(addr, 1);
+        let stream = bluer::rfcomm::Stream::connect(target).await.map_err(|e| {
+            format!(
+                "Connection failed: {}. Make sure 'Aura Link' is running on the phone.",
+                e
+            )
+        })?;
+
+        println!("RFCOMM Stream established!");
+
+        // Split Stream
+        let (reader, writer) = tokio::io::split(stream);
+
+        // Store Writer in State
+        let state = app.state::<BluetoothAppState>();
+        *state.output_stream.lock().await = Some(writer);
+
+        // Spawn Reader Loop
+        let app_handle = app.clone();
+        tauri::async_runtime::spawn(async move {
+            let mut buf_reader = BufReader::new(reader);
+            let mut line = String::new();
+
+            // Notify Frontend we are connected fully
+            let _ = app_handle.emit("connection-state", "connected");
+
+            println!("Starting Read Loop...");
+
+            loop {
+                line.clear();
+                // Read line (assuming protocol is line-based JSON)
+                match buf_reader.read_line(&mut line).await {
+                    Ok(0) => {
+                        println!("Stream closed (EOF)");
+                        break;
+                    }
+                    Ok(_) => {
+                        let trimmed = line.trim();
+                        if !trimmed.is_empty() {
+                            println!("Received: {}", trimmed);
+                            // Valid JSON check
+                            match serde_json::from_str::<serde_json::Value>(trimmed) {
+                                Ok(json_val) => {
+                                    if let Some(msg_type) =
+                                        json_val.get("type").and_then(|v| v.as_str())
+                                    {
+                                        if msg_type == "CALL_STATE" {
+                                            if let Some(payload) = json_val.get("payload") {
+                                                let _ =
+                                                    app_handle.emit("call-state-update", payload);
+                                            }
+                                        }
+                                    }
+                                    // Debug emit
+                                    let _ = app_handle.emit("bluetooth-message", json_val);
+                                }
+                                Err(e) => {
+                                    println!("Failed to parse incoming JSON: {}", e);
+                                }
+                            }
+                        }
+                    }
+                    Err(e) => {
+                        println!("Error reading from stream: {}", e);
+                        break;
+                    }
+                }
             }
-        }
 
-        // VERIFICATION STEP with Polling
-        // Sometimes BlueZ takes a moment to update the 'Connected' property after the method returns.
-        // We will poll for usage.
+            println!("Read loop ended. Disconnected.");
+            let _ = app_handle.emit("connection-state", "disconnected");
 
-        let mut retries = 5;
-        let mut is_verified = false;
+            let state = app_handle.state::<BluetoothAppState>();
+            *state.output_stream.lock().await = None;
+        });
 
-        while retries > 0 {
-            tokio::time::sleep(Duration::from_millis(500)).await;
-            if device.is_connected().await.unwrap_or(false) {
-                is_verified = true;
-                break;
-            }
-            println!(
-                "Verification retry {}/5: Device not yet connected...",
-                6 - retries
-            );
-            retries -= 1;
-        }
-
-        if !is_verified {
-            println!("Verification failed: Device 'Connected' property is false after retries.");
-            return Err("Failed to verify connection. Please minimize the app and check system Bluetooth settings, or try again.".to_string());
-        }
-
-        println!("Connected to {} verified!", address);
-
-        // Emit Connected Event
-        // app.emit("connection-state", "connected")...
-
+        println!("Connected to {} verified via Socket!", address);
         Ok(())
     }
 
-    pub fn send_command(action: String, number: Option<String>) -> Result<(), String> {
-        // Just log for now
+    pub async fn send_command(
+        app: &AppHandle,
+        action: String,
+        number: Option<String>,
+    ) -> Result<(), String> {
+        use crate::protocol::{CommandPayload, ProtocolMessage};
+
         println!("Sending Command: {} {:?}", action, number);
-        Ok(())
+
+        let payload = CommandPayload { action, number };
+        let msg = ProtocolMessage::Command(payload);
+
+        let json = serde_json::to_string(&msg).map_err(|e| e.to_string())?;
+        let line = json + "\n"; // Append newline for line-based protocol
+
+        let state = app.state::<BluetoothAppState>();
+        let mut writer_guard = state.output_stream.lock().await;
+
+        if let Some(writer) = writer_guard.as_mut() {
+            writer
+                .write_all(line.as_bytes())
+                .await
+                .map_err(|e| e.to_string())?;
+            writer.flush().await.map_err(|e| e.to_string())?;
+            println!("Sent: {}", line.trim());
+            Ok(())
+        } else {
+            Err("Not connected (No output stream)".to_string())
+        }
     }
 }
 
@@ -227,6 +313,10 @@ pub async fn connect_device(app: AppHandle, address: String) -> Result<String, S
 }
 
 #[tauri::command]
-pub fn send_command(action: String, number: Option<String>) -> Result<(), String> {
-    BluetoothManager::send_command(action, number)
+pub async fn send_command(
+    app: AppHandle,
+    action: String,
+    number: Option<String>,
+) -> Result<(), String> {
+    BluetoothManager::send_command(&app, action, number).await
 }

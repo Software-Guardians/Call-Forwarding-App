@@ -77,6 +77,9 @@ pub fn run() {
                 app.global_shortcut().register(ctrl_alt_s)?;
             }
 
+            // Register Bluetooth Global State
+            app.manage(bluetooth::BluetoothAppState::default());
+
             let quit_i = MenuItem::with_id(app, "quit", "Quit", true, None::<&str>)?;
             let show_i = MenuItem::with_id(app, "show", "Show", true, None::<&str>)?;
             let menu = Menu::with_items(app, &[&show_i, &quit_i])?;
