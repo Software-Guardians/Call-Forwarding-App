@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { DashboardHeader } from '../components/dashboard/DashboardHeader';
 import { ActionButtons } from '../components/dashboard/ActionButtons';
 import { LiveConsole } from '../components/dashboard/LiveConsole';
@@ -11,21 +11,20 @@ interface DashboardProps {
     onSimulateIncomingCall?: () => void;
 }
 
-import { invoke } from '@tauri-apps/api/core';
 import { useCallState } from '../hooks/useCallState';
+import { useBluetooth } from '../hooks/useBluetooth';
 import { IncomingCallOverlay } from '../components/overlays/IncomingCallOverlay';
+import ScanDeviceModal from '../components/modals/ScanDeviceModal';
 
 export const Dashboard: React.FC<DashboardProps> = ({ onDialpadClick, onContactsClick, onSimulateIncomingCall }) => {
     const { callState, callerNumber } = useCallState();
+    const bluetooth = useBluetooth();
+    const [isScanModalOpen, setIsScanModalOpen] = useState(false);
 
-    const handleConnect = async () => {
-        try {
-            console.log('Initiating Bluetooth scan...');
-            await invoke('start_scan');
-            console.log('Scan command sent successfully.');
-        } catch (error) {
-            console.error('Failed to start scan:', error);
-        }
+    const handleConnect = () => {
+        setIsScanModalOpen(true);
+        // Scan starts automatically when modal opens if idle, or we can trigger here
+        // bluetooth.startScan(); 
     };
 
     return (
@@ -37,6 +36,16 @@ export const Dashboard: React.FC<DashboardProps> = ({ onDialpadClick, onContacts
                 {callState === 'RINGING' && (
                     <IncomingCallOverlay callerNumber={callerNumber} />
                 )}
+
+                <ScanDeviceModal
+                    isOpen={isScanModalOpen}
+                    onClose={() => setIsScanModalOpen(false)}
+                    connectionState={bluetooth.connectionState}
+                    availableDevices={bluetooth.availableDevices}
+                    startScan={bluetooth.startScan}
+                    connectToDevice={bluetooth.connectToDevice}
+                    error={bluetooth.error}
+                />
 
                 <DashboardHeader />
 

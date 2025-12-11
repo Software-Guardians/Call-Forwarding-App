@@ -38,8 +38,13 @@
 ### Phase 5: Core Logic Implementation (Real Device Integration)
 
 - [x] **Step 1**: Implement real Bluetooth Socket connection (RFCOMM).
-- [ ] **Step 2**: Replace simulated data with real socket data.
-- [ ] **Step 3**: Implement Call Logic based on JSON Protocol (Incoming/Active/Ended).
+- [x] **Step 2**: **Enhanced Connection UI**:
+  - Implement "Scan Devices" Modal (triggered by Connect button).
+  - Display list of discovered devices with **Device Type Icons** (Phone vs Other).
+  - Filter devices to allow connection **ONLY to Android Phones** (based on CoD or UUID).
+  - Robust **Connection State Management** (Connecting, Connected, Disconnected, Failed) with UI feedback.
+- [ ] **Step 3**: Replace simulated data with real socket data.
+- [ ] **Step 4**: Implement Call Logic based on JSON Protocol (Incoming/Active/Ended).
 
 ### Phase 6: Protocol Handshake
 
