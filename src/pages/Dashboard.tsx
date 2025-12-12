@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { DashboardHeader } from '../components/dashboard/DashboardHeader';
 import { ActionButtons } from '../components/dashboard/ActionButtons';
 import { LiveConsole } from '../components/dashboard/LiveConsole';
@@ -14,18 +14,11 @@ interface DashboardProps {
 import { useCallState } from '../hooks/useCallState';
 import { useBluetooth } from '../hooks/useBluetooth';
 import { IncomingCallOverlay } from '../components/overlays/IncomingCallOverlay';
-import ScanDeviceModal from '../components/modals/ScanDeviceModal';
-
 export const Dashboard: React.FC<DashboardProps> = ({ onDialpadClick, onContactsClick, onSimulateIncomingCall }) => {
     const { callState, callerNumber } = useCallState();
     const bluetooth = useBluetooth();
-    const [isScanModalOpen, setIsScanModalOpen] = useState(false);
 
-    const handleConnect = () => {
-        setIsScanModalOpen(true);
-        // Scan starts automatically when modal opens if idle, or we can trigger here
-        // bluetooth.startScan(); 
-    };
+    // No manual connection logic needed (Server Mode)
 
     return (
         <div className="h-full flex items-center justify-center font-display overflow-hidden relative">
@@ -36,17 +29,6 @@ export const Dashboard: React.FC<DashboardProps> = ({ onDialpadClick, onContacts
                 {callState === 'RINGING' && (
                     <IncomingCallOverlay callerNumber={callerNumber} />
                 )}
-
-                <ScanDeviceModal
-                    isOpen={isScanModalOpen}
-                    onClose={() => setIsScanModalOpen(false)}
-                    connectionState={bluetooth.connectionState}
-                    availableDevices={bluetooth.availableDevices}
-                    startScan={bluetooth.startScan}
-                    connectToDevice={bluetooth.connectToDevice}
-                    cancelScan={bluetooth.cancelScan}
-                    error={bluetooth.error}
-                />
 
                 <DashboardHeader
                     connectionState={bluetooth.connectionState}
@@ -59,7 +41,6 @@ export const Dashboard: React.FC<DashboardProps> = ({ onDialpadClick, onContacts
                         onDialpadClick={onDialpadClick}
                         onContactsClick={onContactsClick}
                         onSimulateCall={onSimulateIncomingCall}
-                        onConnect={handleConnect}
                     />
                     <LiveConsole />
                     <QuickStats />

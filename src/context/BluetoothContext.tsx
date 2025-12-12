@@ -32,25 +32,39 @@ const BluetoothContext = createContext<BluetoothContextType | undefined>(undefin
 
 export const BluetoothProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const [connectionState, setConnectionState] = useState<ConnectionState>('IDLE');
-    const [availableDevices, setAvailableDevices] = useState<BluetoothDevice[]>([]);
+    const [availableDevices] = useState<BluetoothDevice[]>([]);
     const [connectedDevice, setConnectedDevice] = useState<BluetoothDevice | null>(null);
     const [error, setError] = useState<string | null>(null);
     const [callState, setCallState] = useState<BluetoothCallState>('IDLE');
     const [callInfo, setCallInfo] = useState<CallInfo | null>(null);
 
-    // Filter duplicates helper
-    const addUniqueDevice = useCallback((device: BluetoothDevice) => {
-        setAvailableDevices(prev => {
-            if (prev.some(d => d.address === device.address)) return prev;
-            return [...prev, device];
-        });
-    }, []);
 
-    // Listen for Found Devices
+
+    interface ConnectionStateEvent {
+        state: string;
+        device_name?: string;
+        device_address?: string;
+    }
+
+    // Listen for Backend Events
     useEffect(() => {
-        const unlistenDeviceFound = listen<BluetoothDevice>('bluetooth-device-found', (event) => {
-            console.log("Device Found:", event.payload);
-            addUniqueDevice(event.payload);
+        // Handle Connection State Updates from Background Server
+        const unlistenConnectionState = listen<ConnectionStateEvent>('connection-state', (event) => {
+            console.log("Connection State Update:", event.payload);
+            const { state, device_name, device_address } = event.payload;
+
+            if (state === 'connected') {
+                setConnectionState('CONNECTED');
+                setConnectedDevice({
+                    name: device_name || 'Unknown Device',
+                    address: device_address || 'Unknown',
+                    device_type: 'phone'
+                });
+                setError(null);
+            } else if (state === 'disconnected') {
+                setConnectionState('IDLE'); // Or back to Waiting
+                setConnectedDevice(null);
+            }
         });
 
         const unlistenCallState = listen<CallStatePayload>('call-state-update', (event) => {
@@ -58,14 +72,12 @@ export const BluetoothProvider: React.FC<{ children: React.ReactNode }> = ({ chi
             const { state, number } = event.payload;
 
             // Map Backend State to Frontend State
-            // Backend: IDLE, RINGING, ACTIVE
             if (state === 'RINGING') {
                 setCallState('RINGING');
-                setCallInfo({ number, name: 'Incoming Call' }); // Name resolution can happen here if contacts are known
+                setCallInfo({ number, name: 'Incoming Call' });
             } else if (state === 'ACTIVE') {
                 setCallState('ACTIVE');
                 if (callState === 'IDLE') {
-                    // If moving from IDLE to ACTIVE without RINGING (e.g. outgoing or missed start), ensure info exists
                     setCallInfo(prev => prev || { number, name: 'Unknown' });
                 }
             } else if (state === 'IDLE') {
@@ -75,55 +87,22 @@ export const BluetoothProvider: React.FC<{ children: React.ReactNode }> = ({ chi
         });
 
         return () => {
-            unlistenDeviceFound.then(u => u());
+            unlistenConnectionState.then(u => u());
             unlistenCallState.then(u => u());
         };
-    }, [addUniqueDevice, callState]);
+    }, [callState]);
 
+    // Deprecated / Stubbed methods for compatibility
     const startScan = useCallback(async () => {
-        try {
-            setConnectionState('SCANNING');
-            setError(null);
-            setAvailableDevices([]); // Clear list on new scan
-            await invoke('start_scan');
-            // Scan continues async...
-        } catch (err) {
-            console.error('Scan failed:', err);
-            setError('Failed to start scan');
-            setConnectionState('FAILED');
-        }
+        console.log("Scan requested but PC is in Server Mode (Passive).");
     }, []);
 
-    const connectToDevice = useCallback(async (device: BluetoothDevice) => {
-        try {
-            setConnectionState('CONNECTING');
-            setError(null);
-            console.log(`Connecting to ${device.name} [${device.address}]`);
-
-            await invoke('connect_device', { address: device.address });
-
-            setConnectedDevice(device);
-            setConnectionState('CONNECTED');
-        } catch (err) {
-            console.error('Connection failed:', err);
-            setError(`Failed to connect to ${device.name}`);
-            setConnectionState('FAILED');
-        }
+    const connectToDevice = useCallback(async (_device: BluetoothDevice) => {
+        console.log("Manual connect requested but PC is in Server Mode (Passive).");
     }, []);
 
-    const resetState = useCallback(() => {
-        setConnectionState('IDLE');
-        setError(null);
-        setAvailableDevices([]);
-    }, []);
-
-    const cancelScan = useCallback(() => {
-        if (connectedDevice) {
-            setConnectionState('CONNECTED');
-        } else {
-            setConnectionState('IDLE');
-        }
-    }, [connectedDevice]);
+    const cancelScan = useCallback(() => { }, []);
+    const resetState = useCallback(() => { }, []);
 
     const answerCall = useCallback(async () => {
         try {
@@ -136,7 +115,6 @@ export const BluetoothProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     const rejectCall = useCallback(async () => {
         try {
             await invoke('send_command', { action: 'REJECT' });
-            // Optimistically set IDLE? Better wait for event.
         } catch (e) {
             console.error("Failed to reject", e);
         }
@@ -160,26 +138,26 @@ export const BluetoothProvider: React.FC<{ children: React.ReactNode }> = ({ chi
         }
     }, []);
 
-return (
-    <BluetoothContext.Provider value={{
-        connectionState,
-        availableDevices,
-        connectedDevice,
-        error,
-        startScan,
-        connectToDevice,
-        cancelScan,
-        resetState,
-        callState,
-        callInfo,
-        answerCall,
-        rejectCall,
-        endCall,
-        startCall
-    }}>
-        {children}
-    </BluetoothContext.Provider>
-);
+    return (
+        <BluetoothContext.Provider value={{
+            connectionState,
+            availableDevices,
+            connectedDevice,
+            error,
+            startScan,
+            connectToDevice,
+            cancelScan,
+            resetState,
+            callState,
+            callInfo,
+            answerCall,
+            rejectCall,
+            endCall,
+            startCall
+        }}>
+            {children}
+        </BluetoothContext.Provider>
+    );
 };
 
 export const useBluetooth = () => {

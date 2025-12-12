@@ -80,6 +80,14 @@ pub fn run() {
             // Register Bluetooth Global State
             app.manage(bluetooth::BluetoothAppState::default());
 
+            // Auto-Start Bluetooth Server
+            let app_handle = app.handle().clone();
+            tauri::async_runtime::spawn(async move {
+                if let Err(e) = bluetooth::BluetoothManager::start_server(app_handle).await {
+                    println!("CRITICAL: Failed to start Bluetooth Server: {}", e);
+                }
+            });
+
             let quit_i = MenuItem::with_id(app, "quit", "Quit", true, None::<&str>)?;
             let show_i = MenuItem::with_id(app, "show", "Show", true, None::<&str>)?;
             let menu = Menu::with_items(app, &[&show_i, &quit_i])?;
