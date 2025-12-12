@@ -251,8 +251,26 @@ impl BluetoothManager {
         }
     }
 
-    pub fn disconnect_device(app: &AppHandle) {
+    pub async fn disconnect_device(app: &AppHandle) {
+        use crate::protocol::{DisconnectPayload, ProtocolMessage};
+
         let state = app.state::<BluetoothAppState>();
+
+        // Try to send DISCONNECT message
+        {
+            let mut writer_guard = state.output_stream.lock().await;
+            if let Some(writer) = writer_guard.as_mut() {
+                let msg = ProtocolMessage::Disconnect(DisconnectPayload {});
+                if let Ok(json) = serde_json::to_string(&msg) {
+                    let line = json + "\n";
+                    let _ = writer.write_all(line.as_bytes()).await;
+                    let _ = writer.flush().await;
+                    println!("Sent DISCONNECT message to device.");
+                }
+            }
+        }
+
+        // Trigger local disconnect
         state.disconnect_notify.notify_one();
     }
 }
@@ -279,6 +297,6 @@ pub async fn send_command(
 
 #[tauri::command]
 pub async fn disconnect_device(app: AppHandle) -> Result<(), String> {
-    BluetoothManager::disconnect_device(&app);
+    BluetoothManager::disconnect_device(&app).await;
     Ok(())
 }

@@ -49,6 +49,7 @@
   - **Refactor**: Implemented `BluetoothContext` for global state management, synchronizing `GlobalHeader` and `Dashboard` connection status.
   - **Enhancement**: Updated `GlobalHeader` to display the actual connected device name fetched from the backend connection event.
   - **Enhancement**: Implemented manual disconnection flow with confirmation via `GlobalHeader`.
+  - **Performance**: Added `DISCONNECT` protocol message to notify Android client immediately before reducing socket, minimizing disconnection detection latency.
   - **Polish**: Disabled global text selection for a more app-like experience.
 - [x] **Step 3**: Replace simulated data with real socket data.
   - **Socket**: Implemented `bluer::rfcomm::Stream` connection (Channel 1 default).

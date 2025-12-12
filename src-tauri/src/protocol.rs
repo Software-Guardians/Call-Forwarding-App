@@ -15,6 +15,8 @@ pub enum ProtocolMessage {
     Heartbeat(HeartbeatPayload),
     #[serde(rename = "HANDSHAKE")]
     Handshake(HandshakePayload),
+    #[serde(rename = "DISCONNECT")]
+    Disconnect(DisconnectPayload),
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
@@ -55,6 +57,9 @@ pub struct HeartbeatPayload {}
 pub struct HandshakePayload {
     pub version: String,
 }
+
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+pub struct DisconnectPayload {}
 
 #[cfg(test)]
 mod tests {
