@@ -23,6 +23,17 @@
 }
 
 @layer utilities {
+  #root {
+    max-width: 1280px;
+    margin: 0 auto;
+    text-align: center;
+    user-select: none;
+  }
+
+  html,
+  body {
+    user-select: none;
+  }
 
   /* Custom Scrollbar for Webkit */
   ::-webkit-scrollbar {
@@ -69,11 +80,11 @@
     border-color: rgb(var(--color-primary));
   }
 
-  .toggle-checkbox:checked + .toggle-label {
+  .toggle-checkbox:checked+.toggle-label {
     background-color: rgba(var(--color-primary), 0.2);
   }
 
-  .toggle-checkbox:checked + .toggle-label:before {
+  .toggle-checkbox:checked+.toggle-label:before {
     transform: translateX(100%);
     background-color: rgb(var(--color-primary));
     box-shadow: 0 0 10px rgb(var(--color-primary));

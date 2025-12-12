@@ -64,7 +64,8 @@ pub fn run() {
             log_message,
             bluetooth::start_scan,
             bluetooth::send_command,
-            bluetooth::connect_device
+            bluetooth::connect_device,
+            bluetooth::disconnect_device
         ])
         .setup(|app| {
             #[cfg(desktop)]

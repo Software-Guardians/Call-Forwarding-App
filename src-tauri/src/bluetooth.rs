@@ -6,10 +6,11 @@ use bluer::{
 use futures::StreamExt; // For handle.next()
 use serde::Serialize;
 use std::str::FromStr;
+use std::sync::Arc;
 use std::time::{Duration, Instant};
 use tauri::{AppHandle, Emitter, Manager};
 use tokio::io::{AsyncBufReadExt, AsyncWriteExt, BufReader};
-use tokio::sync::Mutex;
+use tokio::sync::{Mutex, Notify};
 use uuid::Uuid;
 
 // Custom UUID for Aura Link Application
@@ -26,6 +27,7 @@ pub struct BluetoothAppState {
     // We store the WriteHalf of the RFCOMM stream
     pub output_stream: Mutex<Option<tokio::io::WriteHalf<bluer::rfcomm::Stream>>>,
     pub last_activity: Mutex<Instant>,
+    pub disconnect_notify: Arc<Notify>,
 }
 
 impl Default for BluetoothAppState {
@@ -33,6 +35,7 @@ impl Default for BluetoothAppState {
         Self {
             output_stream: Mutex::new(None),
             last_activity: Mutex::new(Instant::now()),
+            disconnect_notify: Arc::new(Notify::new()),
         }
     }
 }
@@ -140,51 +143,61 @@ impl BluetoothManager {
                             // Read Loop
                             let mut buf_reader = BufReader::new(reader);
                             let mut line = String::new();
+                            let disconnect_notify = state.disconnect_notify.clone();
+
                             loop {
                                 line.clear();
-                                match buf_reader.read_line(&mut line).await {
-                                    Ok(0) => break, // EOF
-                                    Ok(_) => {
-                                        let trimmed = line.trim();
-                                        if !trimmed.is_empty() {
-                                            let state =
-                                                app_handle_clone.state::<BluetoothAppState>();
-                                            *state.last_activity.lock().await = Instant::now();
+                                tokio::select! {
+                                        _ = disconnect_notify.notified() => {
+                                            println!("Disconnect requested locally via UI.");
+                                            break;
+                                        }
+                                        read_res = buf_reader.read_line(&mut line) => {
+                                            match read_res {
+                                                Ok(0) => break, // EOF
+                                                Ok(_) => {
+                                            let trimmed = line.trim();
+                                            if !trimmed.is_empty() {
+                                                let state =
+                                                    app_handle_clone.state::<BluetoothAppState>();
+                                                *state.last_activity.lock().await = Instant::now();
 
-                                            match serde_json::from_str::<serde_json::Value>(trimmed)
-                                            {
-                                                Ok(json_val) => {
-                                                    if let Some(msg_type) = json_val
-                                                        .get("type")
-                                                        .and_then(|v| v.as_str())
-                                                    {
-                                                        if msg_type == "CALL_STATE" {
-                                                            let _ = app_handle_clone.emit(
-                                                                "call-state-update",
-                                                                json_val.get("payload"),
-                                                            );
-                                                        } else if msg_type == "CONTACTS_DATA" {
-                                                            let _ = app_handle_clone.emit(
-                                                                "contacts-update",
-                                                                json_val.get("payload"),
-                                                            );
-                                                        } else if msg_type == "HANDSHAKE" {
-                                                            println!("Handshake received!");
+                                                match serde_json::from_str::<serde_json::Value>(trimmed)
+                                                {
+                                                    Ok(json_val) => {
+                                                        if let Some(msg_type) = json_val
+                                                            .get("type")
+                                                            .and_then(|v| v.as_str())
+                                                        {
+                                                            if msg_type == "CALL_STATE" {
+                                                                let _ = app_handle_clone.emit(
+                                                                    "call-state-update",
+                                                                    json_val.get("payload"),
+                                                                );
+                                                            } else if msg_type == "CONTACTS_DATA" {
+                                                                let _ = app_handle_clone.emit(
+                                                                    "contacts-update",
+                                                                    json_val.get("payload"),
+                                                                );
+                                                            } else if msg_type == "HANDSHAKE" {
+                                                                println!("Handshake received!");
+                                                            }
                                                         }
+                                                        let _ = app_handle_clone
+                                                            .emit("bluetooth-message", json_val);
                                                     }
-                                                    let _ = app_handle_clone
-                                                        .emit("bluetooth-message", json_val);
+                                                    Err(e) => println!("JSON Error: {}", e),
                                                 }
-                                                Err(e) => println!("JSON Error: {}", e),
                                             }
                                         }
+                                        Err(e) => {
+                                            println!("Read Error: {}", e);
+                                            break;
+                                        }
                                     }
-                                    Err(e) => {
-                                        println!("Read Error: {}", e);
-                                        break;
-                                    }
+                                    } // End select! match
                                 }
-                            }
+                            } // End loop
 
                             println!("Connection lost.");
                             let payload = ConnectionStateEvent {
@@ -237,6 +250,11 @@ impl BluetoothManager {
             Err("Not connected".to_string())
         }
     }
+
+    pub fn disconnect_device(app: &AppHandle) {
+        let state = app.state::<BluetoothAppState>();
+        state.disconnect_notify.notify_one();
+    }
 }
 
 // Deprecated stubs
@@ -257,4 +275,10 @@ pub async fn send_command(
     number: Option<String>,
 ) -> Result<(), String> {
     BluetoothManager::send_command(&app, action, number).await
+}
+
+#[tauri::command]
+pub async fn disconnect_device(app: AppHandle) -> Result<(), String> {
+    BluetoothManager::disconnect_device(&app);
+    Ok(())
 }

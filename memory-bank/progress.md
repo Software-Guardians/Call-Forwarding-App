@@ -48,6 +48,8 @@
   - **Enhancement**: Enabled "Connect" button while connected to allow switching devices; Modal now correctly handles re-scanning without closing.
   - **Refactor**: Implemented `BluetoothContext` for global state management, synchronizing `GlobalHeader` and `Dashboard` connection status.
   - **Enhancement**: Updated `GlobalHeader` to display the actual connected device name fetched from the backend connection event.
+  - **Enhancement**: Implemented manual disconnection flow with confirmation via `GlobalHeader`.
+  - **Polish**: Disabled global text selection for a more app-like experience.
 - [x] **Step 3**: Replace simulated data with real socket data.
   - **Socket**: Implemented `bluer::rfcomm::Stream` connection (Channel 1 default).
   - **I/O**: Added threaded Read Loop for continuous JSON parsing and `BluetoothAppState` for thread-safe writing.

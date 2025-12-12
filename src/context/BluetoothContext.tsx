@@ -24,6 +24,7 @@ interface BluetoothContextType {
 
     startScan: () => void;
     connectToDevice: (device: BluetoothDevice) => void;
+    disconnect: () => void;
     cancelScan: () => void;
     resetState: () => void;
 }
@@ -146,6 +147,13 @@ export const BluetoothProvider: React.FC<{ children: React.ReactNode }> = ({ chi
             error,
             startScan,
             connectToDevice,
+            disconnect: async () => {
+                try {
+                    await invoke('disconnect_device');
+                } catch (e) {
+                    console.error("Failed to disconnect", e);
+                }
+            },
             cancelScan,
             resetState,
             callState,
