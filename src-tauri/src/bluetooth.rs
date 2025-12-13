@@ -253,25 +253,50 @@ impl BluetoothManager {
 
     pub async fn disconnect_device(app: &AppHandle) {
         use crate::protocol::{DisconnectPayload, ProtocolMessage};
+        use tokio::time::timeout;
+
+        println!("Initiating Disconnect Sequence...");
 
         let state = app.state::<BluetoothAppState>();
 
-        // Try to send DISCONNECT message
-        {
+        // 1. Try to send DISCONNECT message (Best Effort with Timeout)
+        // We use a timeout to prevent hanging if the lock is held or write blocks
+        let send_result = timeout(Duration::from_millis(1000), async {
             let mut writer_guard = state.output_stream.lock().await;
             if let Some(writer) = writer_guard.as_mut() {
                 let msg = ProtocolMessage::Disconnect(DisconnectPayload {});
                 if let Ok(json) = serde_json::to_string(&msg) {
                     let line = json + "\n";
-                    let _ = writer.write_all(line.as_bytes()).await;
-                    let _ = writer.flush().await;
-                    println!("Sent DISCONNECT message to device.");
+                    if let Err(e) = writer.write_all(line.as_bytes()).await {
+                        println!("Failed to write disconnect msg: {}", e);
+                    } else {
+                        let _ = writer.flush().await;
+                        println!("Sent DISCONNECT message to device.");
+                    }
                 }
             }
+            // Small delay to ensure data hits the wire before we kill the socket
+            tokio::time::sleep(Duration::from_millis(100)).await;
+        })
+        .await;
+
+        if send_result.is_err() {
+            println!("Timeout sending disconnect message - forcing close.");
         }
 
-        // Trigger local disconnect
+        // 2. Trigger local disconnect logic (Wake up the read loop)
         state.disconnect_notify.notify_one();
+
+        // 3. Force UI Update immediately (don't wait for loop to break)
+        // This ensures the user feels the disconnect immediately.
+        let payload = ConnectionStateEvent {
+            state: "disconnected".to_string(),
+            device_name: None,
+            device_address: None,
+        };
+        let _ = app.emit("connection-state", payload);
+
+        println!("Disconnect Sequence Completed.");
     }
 }
 

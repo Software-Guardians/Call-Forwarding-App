@@ -2,6 +2,7 @@ import React, { createContext, useContext, useState, useEffect, useCallback } fr
 import { invoke } from '@tauri-apps/api/core';
 import { listen } from '@tauri-apps/api/event';
 import { BluetoothDevice, ConnectionState, BluetoothCallState, CallInfo } from '../types/bluetooth';
+import { useLog } from './LogContext';
 
 interface CallStatePayload {
     state: string; // IDLE, RINGING, ACTIVE
@@ -38,6 +39,7 @@ export const BluetoothProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     const [error, setError] = useState<string | null>(null);
     const [callState, setCallState] = useState<BluetoothCallState>('IDLE');
     const [callInfo, setCallInfo] = useState<CallInfo | null>(null);
+    const { addLog } = useLog();
 
 
 
@@ -62,9 +64,11 @@ export const BluetoothProvider: React.FC<{ children: React.ReactNode }> = ({ chi
                     device_type: 'phone'
                 });
                 setError(null);
+                addLog(`Device Connected: ${device_name || 'Unknown'}`, 'success');
             } else if (state === 'disconnected') {
                 setConnectionState('IDLE'); // Or back to Waiting
                 setConnectedDevice(null);
+                addLog('Device Disconnected', 'warning');
             }
         });
 
@@ -76,14 +80,17 @@ export const BluetoothProvider: React.FC<{ children: React.ReactNode }> = ({ chi
             if (state === 'RINGING') {
                 setCallState('RINGING');
                 setCallInfo({ number, name: 'Incoming Call' });
+                addLog(`Incoming Call: ${number || 'Unknown'}`, 'bluetooth');
             } else if (state === 'ACTIVE') {
                 setCallState('ACTIVE');
                 if (callState === 'IDLE') {
                     setCallInfo(prev => prev || { number, name: 'Unknown' });
                 }
+                addLog('Call Active', 'success');
             } else if (state === 'IDLE') {
                 setCallState('IDLE');
                 setCallInfo(null);
+                addLog('Call Ended / Idle', 'info');
             }
         });
 
@@ -110,6 +117,7 @@ export const BluetoothProvider: React.FC<{ children: React.ReactNode }> = ({ chi
             await invoke('send_command', { action: 'ANSWER' });
         } catch (e) {
             console.error("Failed to answer", e);
+            addLog(`Failed to answer call: ${e}`, 'error');
         }
     }, []);
 
@@ -118,6 +126,7 @@ export const BluetoothProvider: React.FC<{ children: React.ReactNode }> = ({ chi
             await invoke('send_command', { action: 'REJECT' });
         } catch (e) {
             console.error("Failed to reject", e);
+            addLog(`Failed to reject call: ${e}`, 'error');
         }
     }, []);
 
@@ -126,6 +135,7 @@ export const BluetoothProvider: React.FC<{ children: React.ReactNode }> = ({ chi
             await invoke('send_command', { action: 'END' });
         } catch (e) {
             console.error("Failed to end call", e);
+            addLog(`Failed to end call: ${e}`, 'error');
         }
     }, []);
 
@@ -134,8 +144,10 @@ export const BluetoothProvider: React.FC<{ children: React.ReactNode }> = ({ chi
             await invoke('send_command', { action: 'DIAL', number });
             setCallState('DIALING');
             setCallInfo({ number, name: 'Dialing...' });
+            addLog(`Dialing: ${number}`, 'bluetooth');
         } catch (e) {
             console.error("Failed to dial", e);
+            addLog(`Failed to dial: ${e}`, 'error');
         }
     }, []);
 
@@ -150,8 +162,10 @@ export const BluetoothProvider: React.FC<{ children: React.ReactNode }> = ({ chi
             disconnect: async () => {
                 try {
                     await invoke('disconnect_device');
+                    addLog('Disconnecting device...', 'info');
                 } catch (e) {
                     console.error("Failed to disconnect", e);
+                    addLog(`Failed to disconnect: ${e}`, 'error');
                 }
             },
             cancelScan,

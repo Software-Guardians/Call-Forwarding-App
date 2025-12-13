@@ -101,11 +101,15 @@ function AppContent() {
   );
 }
 
+import { LogProvider } from "./context/LogContext";
+
 function App() {
   return (
-    <BluetoothProvider>
-      <AppContent />
-    </BluetoothProvider>
+    <LogProvider>
+      <BluetoothProvider>
+        <AppContent />
+      </BluetoothProvider>
+    </LogProvider>
   );
 }
 
