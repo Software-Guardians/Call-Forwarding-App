@@ -1,12 +1,17 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { invoke } from '@tauri-apps/api/core';
 import { listen } from '@tauri-apps/api/event';
-import { BluetoothDevice, ConnectionState, BluetoothCallState, CallInfo } from '../types/bluetooth';
+import { BluetoothDevice, ConnectionState, BluetoothCallState, CallInfo, Contact } from '../types/bluetooth';
 import { useLog } from './LogContext';
 
 interface CallStatePayload {
     state: string; // IDLE, RINGING, ACTIVE
     number?: string;
+    name?: string;
+}
+
+interface ContactsDataPayload {
+    contacts: Contact[];
 }
 
 interface BluetoothContextType {
@@ -22,6 +27,10 @@ interface BluetoothContextType {
     rejectCall: () => void;
     endCall: () => void;
     startCall: (number: string) => void;
+
+    // Contacts
+    contacts: Contact[];
+    getContacts: () => void;
 
     startScan: () => void;
     connectToDevice: (device: BluetoothDevice) => void;
@@ -39,6 +48,7 @@ export const BluetoothProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     const [error, setError] = useState<string | null>(null);
     const [callState, setCallState] = useState<BluetoothCallState>('IDLE');
     const [callInfo, setCallInfo] = useState<CallInfo | null>(null);
+    const [contacts, setContacts] = useState<Contact[]>([]);
     const { addLog } = useLog();
 
 
@@ -74,17 +84,17 @@ export const BluetoothProvider: React.FC<{ children: React.ReactNode }> = ({ chi
 
         const unlistenCallState = listen<CallStatePayload>('call-state-update', (event) => {
             console.log("Call State Update:", event.payload);
-            const { state, number } = event.payload;
+            const { state, number, name } = event.payload;
 
             // Map Backend State to Frontend State
             if (state === 'RINGING') {
                 setCallState('RINGING');
-                setCallInfo({ number, name: 'Incoming Call' });
-                addLog(`Incoming Call: ${number || 'Unknown'}`, 'bluetooth');
+                setCallInfo({ number, name: name || 'Incoming Call' });
+                addLog(`Incoming Call: ${name || number || 'Unknown'}`, 'bluetooth');
             } else if (state === 'ACTIVE') {
                 setCallState('ACTIVE');
                 if (callState === 'IDLE') {
-                    setCallInfo(prev => prev || { number, name: 'Unknown' });
+                    setCallInfo(prev => prev || { number, name: name || 'Unknown' });
                 }
                 addLog('Call Active', 'success');
             } else if (state === 'IDLE') {
@@ -94,9 +104,17 @@ export const BluetoothProvider: React.FC<{ children: React.ReactNode }> = ({ chi
             }
         });
 
+        const unlistenContacts = listen<ContactsDataPayload>('contacts-update', (event) => {
+            console.log("Contacts Update:", event.payload);
+            const { contacts } = event.payload;
+            setContacts(contacts || []);
+            addLog(`Received ${contacts?.length || 0} contacts`, 'success');
+        });
+
         return () => {
             unlistenConnectionState.then(u => u());
             unlistenCallState.then(u => u());
+            unlistenContacts.then(u => u());
         };
     }, [callState]);
 
@@ -139,6 +157,16 @@ export const BluetoothProvider: React.FC<{ children: React.ReactNode }> = ({ chi
         }
     }, []);
 
+    const getContacts = useCallback(async () => {
+        try {
+            await invoke('send_command', { action: 'GET_CONTACTS' });
+            addLog('Requesting contacts...', 'info');
+        } catch (e) {
+            console.error("Failed to get contacts", e);
+            addLog(`Failed to get contacts: ${e}`, 'error');
+        }
+    }, []);
+
     const startCall = useCallback(async (number: string) => {
         try {
             await invoke('send_command', { action: 'DIAL', number });
@@ -175,7 +203,9 @@ export const BluetoothProvider: React.FC<{ children: React.ReactNode }> = ({ chi
             answerCall,
             rejectCall,
             endCall,
-            startCall
+            startCall,
+            contacts,
+            getContacts
         }}>
             {children}
         </BluetoothContext.Provider>

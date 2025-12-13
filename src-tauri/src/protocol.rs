@@ -7,8 +7,7 @@ pub enum ProtocolMessage {
     CallState(CallStatePayload),
     #[serde(rename = "COMMAND")]
     Command(CommandPayload),
-    #[serde(rename = "GET_CONTACTS")]
-    GetContacts(GetContactsPayload),
+    // GET_CONTACTS is now a Command
     #[serde(rename = "CONTACTS_DATA")]
     ContactsData(ContactsDataPayload),
     #[serde(rename = "HEARTBEAT")]
@@ -24,19 +23,18 @@ pub struct CallStatePayload {
     pub state: String, // IDLE, RINGING, ACTIVE
     #[serde(skip_serializing_if = "Option::is_none")]
     pub number: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub name: Option<String>,
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub struct CommandPayload {
-    pub action: String, // ANSWER, REJECT, END, DIAL
+    pub action: String, // ANSWER, REJECT, END, DIAL, GET_CONTACTS
     #[serde(skip_serializing_if = "Option::is_none")]
     pub number: Option<String>,
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
-pub struct GetContactsPayload {
-    pub action: String, // GET_CONTACTS
-}
+// GetContactsPayload removed as it is now handled by CommandPayload with action "GET_CONTACTS"
 
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub struct ContactsDataPayload {

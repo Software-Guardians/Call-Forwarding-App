@@ -82,7 +82,7 @@
 
 **Problem**: Acting on calls.
 
-- [ ] **Step 1**: Implement "Answer/Reject" IPC commands (Renderer -> Main -> Bluetooth).
+- [x] **Step 1**: Implement "Answer/Reject" IPC commands (Renderer -> Main -> Bluetooth).
 - [ ] **Step 2**: Register Global Hotkeys using Tauri `global-shortcut` plugin.
 
 ### Phase 8: Real Data

@@ -14,6 +14,11 @@ export interface CallInfo {
     number?: string;
 }
 
+export interface Contact {
+    name: string;
+    phoneNumber: string;
+}
+
 export interface BluetoothState {
     connectionState: ConnectionState;
     availableDevices: BluetoothDevice[];
